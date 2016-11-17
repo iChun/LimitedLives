@@ -1,0 +1,21 @@
+[
+{
+  "modid" : "LimitedLives",
+  "name" : "LimitedLives",
+  "version" : "${version}",
+  "url" : "http://ichun.me/",
+  "credits" : "",
+  "authorList": [
+    "iChun"
+  ],
+  "description": "A tiny mod that limits the number of lives you can have, constantly draining your health, before banning you from the server.",
+  "logoFile" : "",
+  "updateUrl" : "",
+  "parent" : "",
+  "screenshots": [
+  ],
+  "dependencies": [
+    "Forge"
+  ]
+}
+]
