@@ -1,9 +1,9 @@
 [
 {
-  "modid" : "LimitedLives",
+  "modid" : "limitedlives",
   "name" : "LimitedLives",
   "version" : "${version}",
-  "url" : "http://ichun.me/",
+  "url" : "http://ichun.me/mods/limited-lives/",
   "credits" : "",
   "authorList": [
     "iChun"
