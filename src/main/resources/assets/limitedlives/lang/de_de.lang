@@ -1,0 +1,14 @@
+limitedlives.config.prop.maxLives.comment=Die maximale Anzahl der Leben, die ein Spieler hat, bevor er "gebannet" wird.
+limitedlives.config.prop.banType.comment=Art des Bans wenn ein Spieler zu oft gestorben ist: 1 = Zuschauermodus wird erzwungen "ban". 2 = Spieler wird vom Server gebannt
+limitedlives.config.prop.banTime.comment=Zeit, die ein Spieler gebannt ist (in Sekunden). 0 bedeutet permanenter Bann.
+limitedlives.config.prop.healthAdjust.comment=Passt die Gesundheit des Spielers an.
+
+limitedlives.banReason=[Limited Lives] Du hast keine Leben mehr!
+limitedlives.banKickReason=Du hast keine Leben mehr. Du wurdest vom Server gebannt.
+limitedlives.spectateForce=Du hast keine Leben mehr. Du bist nun für %s Sekunden im Zuschauermodus.
+limitedlives.spectateForcePerma=Du hast keine Leben mehr. Du bist nun für immer im Zuschauermodus.
+limitedlives.respawned=Du wurdest wiederbelebt. Willkommen zurück.
+limitedlives.respawnTimeLeft=Du wirst in %s weiteren Minuten wiederbelebt.
+limitedlives.respawnTimeLeftSingle=Du wirst in der nächsten Minute wiederbelebt.
+limitedlives.livesLeft=Du hast nur noch %s Leben.
+limitedlives.livesLeftSingle=Du hast nur noch ein Leben.
