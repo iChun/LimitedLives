@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
         guiFactory = "me.ichun.mods.limitedlives.common.core.GuiFactory",
         acceptableRemoteVersions = "*",
         dependencies = "required-after:forge@[13.19.0.2141,)",
-        acceptedMinecraftVersions = "[1.11,1.12)"
+        acceptedMinecraftVersions = "[1.12,1.13)"
 )
 public class LimitedLives
 {

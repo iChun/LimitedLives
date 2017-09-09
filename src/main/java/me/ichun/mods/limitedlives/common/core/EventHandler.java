@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.UserListBansEntry;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.GameType;
@@ -27,7 +28,7 @@ public class EventHandler
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerDeath(LivingDeathEvent event)
     {
-        if(!event.getEntityLiving().worldObj.isRemote && event.getEntityLiving() instanceof EntityPlayer && !(event.getEntityLiving() instanceof FakePlayer))
+        if(!event.getEntityLiving().getEntityWorld().isRemote && event.getEntityLiving() instanceof EntityPlayer && !(event.getEntityLiving() instanceof FakePlayer))
         {
             EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
             if(player.interactionManager.getGameType() == GameType.CREATIVE || player.interactionManager.getGameType() == GameType.SPECTATOR)
@@ -63,18 +64,19 @@ public class EventHandler
                 tag.setLong("banTime", System.currentTimeMillis());
                 player.setGameType(GameType.SPECTATOR);
                 player.fallDistance = 0.0F;
-                player.addChatMessage(LimitedLives.banTime == 0 ? new TextComponentTranslation("limitedlives.spectateForcePerma") : new TextComponentTranslation("limitedlives.spectateForce", LimitedLives.banTime) );
+                player.sendStatusMessage(LimitedLives.banTime == 0 ? new TextComponentTranslation("limitedlives.spectateForcePerma") : new TextComponentTranslation("limitedlives.spectateForce", LimitedLives.banTime), false);
             }
             else
             {
                 UserListBansEntry userlistbansentry = new UserListBansEntry(player.getGameProfile(), null, Reference.NAME, LimitedLives.banTime == 0 ? null : new Date(System.currentTimeMillis() + (LimitedLives.banTime * 1000L)), I18n.translateToLocal("limitedlives.banReason"));
                 minecraftserver.getPlayerList().getBannedPlayers().addEntry(userlistbansentry);
-                player.connection.kickPlayerFromServer(I18n.translateToLocal("limitedlives.banKickReason"));
+                player.connection.disconnect(new TextComponentString(I18n.translateToLocal("limitedlives.banKickReason")));
             }
         }
         else if(LimitedLives.healthAdjust == 1)
         {
             double nextHealth = Math.max(20 - (deaths / (double)LimitedLives.maxLives * 20D) + tag.getDouble("healthOffset"), 1D);
+            System.out.println(nextHealth);
             event.player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(nextHealth);
         }
     }
@@ -92,7 +94,7 @@ public class EventHandler
                 long banTime = tag.getLong("banTime");
                 if((banTime + (LimitedLives.banTime * 1000L) - System.currentTimeMillis()) % FIVE_MINS_IN_MS > (banTime + 1000L + (LimitedLives.banTime * 1000L) - System.currentTimeMillis()) % FIVE_MINS_IN_MS && banTime + 1000L + (LimitedLives.banTime * 1000L) - System.currentTimeMillis() > FIVE_MINS_IN_MS && player.interactionManager.getGameType() == GameType.SPECTATOR)
                 {
-                    player.addChatMessage(new TextComponentTranslation("limitedlives.respawnTimeLeft", (int)Math.ceil((banTime + (LimitedLives.banTime * 1000L) - System.currentTimeMillis()) / (float)FIVE_MINS_IN_MS * 5F)));
+                    player.sendStatusMessage(new TextComponentTranslation("limitedlives.respawnTimeLeft", (int)Math.ceil((banTime + (LimitedLives.banTime * 1000L) - System.currentTimeMillis()) / (float)FIVE_MINS_IN_MS * 5F)), false);
                 }
                 if((new Date(banTime + (LimitedLives.banTime * 1000L))).before(new Date()) || player.interactionManager.getGameType() != GameType.SPECTATOR) //later is to say, player was pardoned by an op.
                 {
@@ -113,7 +115,7 @@ public class EventHandler
                     tag.removeTag("banTime");
                     if(respawn)
                     {
-                        player.connection.playerEntity = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().recreatePlayerEntity(player, player.dimension, false);
+                        player.connection.player = FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().recreatePlayerEntity(player, player.dimension, false);
                         if(LimitedLives.healthAdjust == 1)
                         {
                             player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + tag.getDouble("healthOffset"));
@@ -134,11 +136,11 @@ public class EventHandler
             if(deaths >= LimitedLives.maxLives && LimitedLives.banTime > 0)
             {
                 int time = (int)Math.ceil((tag.getLong("banTime") + 1000L + (LimitedLives.banTime * 1000L) - System.currentTimeMillis()) / (float)(FIVE_MINS_IN_MS / 5F));
-                event.getPlayer().addChatMessage(new TextComponentTranslation(time == 1 ? "limitedlives.respawnTimeLeftSingle" : "limitedlives.respawnTimeLeft", time));
+                event.getPlayer().sendStatusMessage(new TextComponentTranslation(time == 1 ? "limitedlives.respawnTimeLeftSingle" : "limitedlives.respawnTimeLeft", time), false);
             }
             else
             {
-                event.getPlayer().addChatMessage(new TextComponentTranslation(LimitedLives.maxLives - deaths == 1 ? "limitedlives.livesLeftSingle" : "limitedlives.livesLeft", LimitedLives.maxLives - deaths));
+                event.getPlayer().sendStatusMessage(new TextComponentTranslation(LimitedLives.maxLives - deaths == 1 ? "limitedlives.livesLeftSingle" : "limitedlives.livesLeft", LimitedLives.maxLives - deaths), false);
             }
             event.setCanceled(true);
         }
