@@ -1,21 +1,21 @@
 package me.ichun.mods.limitedlives.common.core;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 
 public class EntityHelper
 {
-    public static NBTTagCompound getPlayerPersistentData(EntityPlayer player) //gets the persisted NBT.
+    public static CompoundNBT getPlayerPersistentData(PlayerEntity player) //gets the persisted NBT.
     {
-        NBTTagCompound persistentTag = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-        player.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, persistentTag);
+        CompoundNBT persistentTag = player.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+        player.getPersistentData().put(PlayerEntity.PERSISTED_NBT_TAG, persistentTag);
         return persistentTag;
     }
 
-    public static NBTTagCompound getPlayerPersistentData(EntityPlayer player, String name) //gets a tag within the persisted NBT
+    public static CompoundNBT getPlayerPersistentData(PlayerEntity player, String name) //gets a tag within the persisted NBT
     {
-        NBTTagCompound persistentTag = getPlayerPersistentData(player).getCompoundTag(name);
-        getPlayerPersistentData(player).setTag(name, persistentTag);
+        CompoundNBT persistentTag = getPlayerPersistentData(player).getCompound(name);
+        getPlayerPersistentData(player).put(name, persistentTag);
         return persistentTag;
     }
 }
