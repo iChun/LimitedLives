@@ -29,8 +29,8 @@ public class LimitedLivesCommand
                     .then(Commands.argument("player", EntityArgument.player())
                         .then(Commands.argument("deaths", IntegerArgumentType.integer(0))
                             .executes((source) -> {
-                                ServerPlayerEntity player = EntityArgument.getPlayer(source, "targets");
-                                int deaths = IntegerArgumentType.getInteger(source, "count");
+                                ServerPlayerEntity player = EntityArgument.getPlayer(source, "player");
+                                int deaths = IntegerArgumentType.getInteger(source, "deaths");
 
                                 CompoundNBT tag = EntityHelper.getPlayerPersistentData(player, "LimitedLivesSave");
                                 tag.putInt("deathCount", deaths);

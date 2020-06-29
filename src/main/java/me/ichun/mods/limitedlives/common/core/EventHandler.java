@@ -2,7 +2,7 @@ package me.ichun.mods.limitedlives.common.core;
 
 import me.ichun.mods.limitedlives.common.LimitedLives;
 import me.ichun.mods.limitedlives.common.command.LimitedLivesCommand;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -40,7 +40,7 @@ public class EventHandler
             {
                 liveCount = LimitedLives.config.maxLives.get();
             }
-            tag.putDouble("healthOffset", event.getEntityLiving().getAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() - (20D - (20D * prevDeaths / (double)liveCount)));
+            tag.putDouble("healthOffset", event.getEntityLiving().getAttribute(Attributes.field_233818_a_).getBaseValue() - (20D - (20D * prevDeaths / (double)liveCount)));
             tag.putInt("deathCount", prevDeaths + 1);
             tag.putInt("maxLives", LimitedLives.config.maxLives.get());
         }
@@ -74,7 +74,7 @@ public class EventHandler
         else if(LimitedLives.config.healthAdjust.get())
         {
             double nextHealth = Math.max(20 - (deaths / (double)LimitedLives.config.maxLives.get() * 20D) + tag.getDouble("healthOffset"), 1D);
-            event.getPlayer().getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(nextHealth);
+            event.getPlayer().getAttribute(Attributes.field_233818_a_).setBaseValue(nextHealth);
         }
     }
 
@@ -102,7 +102,7 @@ public class EventHandler
                         respawn = true;
                         if(LimitedLives.config.healthAdjust.get())
                         {
-                            player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + tag.getDouble("healthOffset"));
+                            player.getAttribute(Attributes.field_233818_a_).setBaseValue(20 + tag.getDouble("healthOffset"));
                         }
                         player.interactionManager.setGameType(GameType.getByID(tag.getInt("gameMode")));
                     }
@@ -112,10 +112,10 @@ public class EventHandler
                     tag.remove("banTime");
                     if(respawn)
                     {
-                        player.connection.player = ServerLifecycleHooks.getCurrentServer().getPlayerList().recreatePlayerEntity(player, player.dimension, false);
+                        player.connection.player = ServerLifecycleHooks.getCurrentServer().getPlayerList().func_232644_a_(player, false); // recreatePlayerEntity
                         if(LimitedLives.config.healthAdjust.get())
                         {
-                            player.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(20 + tag.getDouble("healthOffset"));
+                            player.getAttribute(Attributes.field_233818_a_).setBaseValue(20 + tag.getDouble("healthOffset"));
                         }
                     }
                 }
