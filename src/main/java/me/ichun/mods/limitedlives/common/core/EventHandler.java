@@ -10,12 +10,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ProfileBanEntry;
 import net.minecraft.world.GameType;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.server.command.TextComponentHelper;
 
@@ -40,7 +40,7 @@ public class EventHandler
             {
                 liveCount = LimitedLives.config.maxLives.get();
             }
-            tag.putDouble("healthOffset", event.getEntityLiving().getAttribute(Attributes.field_233818_a_).getBaseValue() - (20D - (20D * prevDeaths / (double)liveCount)));
+            tag.putDouble("healthOffset", event.getEntityLiving().getAttribute(Attributes.MAX_HEALTH).getBaseValue() - (20D - (20D * prevDeaths / (double)liveCount)));
             tag.putInt("deathCount", prevDeaths + 1);
             tag.putInt("maxLives", LimitedLives.config.maxLives.get());
         }
@@ -74,7 +74,7 @@ public class EventHandler
         else if(LimitedLives.config.healthAdjust.get())
         {
             double nextHealth = Math.max(20 - (deaths / (double)LimitedLives.config.maxLives.get() * 20D) + tag.getDouble("healthOffset"), 1D);
-            event.getPlayer().getAttribute(Attributes.field_233818_a_).setBaseValue(nextHealth);
+            event.getPlayer().getAttribute(Attributes.MAX_HEALTH).setBaseValue(nextHealth);
         }
     }
 
@@ -102,7 +102,7 @@ public class EventHandler
                         respawn = true;
                         if(LimitedLives.config.healthAdjust.get())
                         {
-                            player.getAttribute(Attributes.field_233818_a_).setBaseValue(20 + tag.getDouble("healthOffset"));
+                            player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20 + tag.getDouble("healthOffset"));
                         }
                         player.interactionManager.setGameType(GameType.getByID(tag.getInt("gameMode")));
                     }
@@ -115,7 +115,7 @@ public class EventHandler
                         player.connection.player = ServerLifecycleHooks.getCurrentServer().getPlayerList().func_232644_a_(player, false); // recreatePlayerEntity
                         if(LimitedLives.config.healthAdjust.get())
                         {
-                            player.getAttribute(Attributes.field_233818_a_).setBaseValue(20 + tag.getDouble("healthOffset"));
+                            player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20 + tag.getDouble("healthOffset"));
                         }
                     }
                 }
@@ -124,9 +124,9 @@ public class EventHandler
     }
 
     @SubscribeEvent
-    public void onServerAboutToStartEvent(FMLServerStartingEvent event)
+    public void onRegisterCommands(RegisterCommandsEvent event)
     {
-        LimitedLivesCommand.register(event.getCommandDispatcher());
+        LimitedLivesCommand.register(event.getDispatcher());
     }
 
     public static final int FIVE_MINS_IN_MS = 5 * 60 * 1000;
