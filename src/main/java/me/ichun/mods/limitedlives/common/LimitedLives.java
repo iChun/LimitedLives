@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 public class LimitedLives
 {
     public static final String MOD_ID = "limitedlives";
-    public static final String MOD_NAME = "Limiged Lives";
+    public static final String MOD_NAME = "Limited Lives";
 
     public static final Logger LOGGER = LogManager.getLogger();
 
