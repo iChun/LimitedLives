@@ -1,6 +1,6 @@
 {
-   "pack":{
-      "pack_format":6,
-      "description":"Limited Lives"
+   "pack": {
+      "description": "Limited Lives",
+      "pack_format": 8
    }
 }
