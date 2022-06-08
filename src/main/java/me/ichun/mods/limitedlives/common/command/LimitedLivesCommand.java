@@ -35,7 +35,7 @@ public class LimitedLivesCommand
                                 CompoundTag tag = EntityHelper.getPlayerPersistentData(player, "LimitedLivesSave");
                                 tag.putInt("deathCount", deaths);
 
-                                source.getSource().sendSuccess(TextComponentHelper.createComponentTranslation(source.getSource().getEntity(), "limitedlives.setDeaths", player.getName().getContents(), deaths), true);
+                                source.getSource().sendSuccess(TextComponentHelper.createComponentTranslation(source.getSource().getEntity(), "limitedlives.setDeaths", player.getName().getString(), deaths), true);
 
                                 return deaths;
                             }))))

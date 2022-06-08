@@ -56,7 +56,7 @@ public class EventHandler
             //do ban
             ServerPlayer player = (ServerPlayer)event.getPlayer();
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-            if(LimitedLives.config.banType.get() == LimitedLives.BanType.SPECTATOR || server.isSingleplayer() && server.getSingleplayerName().equals(player.getName().getContents()))
+            if(LimitedLives.config.banType.get() == LimitedLives.BanType.SPECTATOR || server.isSingleplayer() && server.getSingleplayerProfile().getName().equals(player.getName().getString()))
             {
                 tag.putInt("gameMode", player.gameMode.getGameModeForPlayer().getId());
                 tag.putLong("banTime", System.currentTimeMillis());
