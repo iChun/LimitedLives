@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.ichun.mods.limitedlives.common.LimitedLives;
 import me.ichun.mods.limitedlives.common.core.EntityHelper;
+import me.ichun.mods.limitedlives.common.core.HealthManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -34,6 +35,7 @@ public class LimitedLivesCommand
 
                                 CompoundTag tag = EntityHelper.getPlayerPersistentData(player, "LimitedLivesSave");
                                 tag.putInt("deathCount", deaths);
+                                HealthManager.updatePlayerHealth(player, deaths);
 
                                 source.getSource().sendSuccess(TextComponentHelper.createComponentTranslation(source.getSource().getEntity(), "limitedlives.setDeaths", player.getName().getContents(), deaths), true);
 
