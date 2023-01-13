@@ -21,6 +21,10 @@ public class HealthManager {
         if (healthAttribute != null) {
             healthAttribute.setBaseValue(Math.max(newHealth, 1D));
         }
+
+        if (player.getHealth() > newHealth) {
+            player.setHealth(newHealth);
+        }
     }
 
     private static int calculateNewHealth(int deaths) {
