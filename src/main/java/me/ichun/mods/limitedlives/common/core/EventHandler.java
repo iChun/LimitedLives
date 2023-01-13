@@ -50,11 +50,11 @@ public class EventHandler
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event)
     {
         CompoundTag tag = EntityHelper.getPlayerPersistentData(event.getPlayer(), "LimitedLivesSave");
+        ServerPlayer player = (ServerPlayer)event.getPlayer();
         int deaths = tag.getInt("deathCount");
         if(deaths >= LimitedLives.config.maxLives.get())
         {
             //do ban
-            ServerPlayer player = (ServerPlayer)event.getPlayer();
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
             if(LimitedLives.config.banType.get() == LimitedLives.BanType.SPECTATOR || server.isSingleplayer() && server.getSingleplayerName().equals(player.getName().getContents()))
             {
@@ -73,8 +73,7 @@ public class EventHandler
         }
         else if(LimitedLives.config.healthAdjust.get())
         {
-            double nextHealth = Math.max(20 - (deaths / (double)LimitedLives.config.maxLives.get() * 20D) + tag.getDouble("healthOffset"), 1D);
-            event.getPlayer().getAttribute(Attributes.MAX_HEALTH).setBaseValue(nextHealth);
+            HealthManager.updatePlayerHealth(player, deaths);
         }
     }
 
