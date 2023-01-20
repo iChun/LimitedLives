@@ -26,9 +26,9 @@ public class EventHandler
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onPlayerDeath(LivingDeathEvent event)
     {
-        if(!event.getEntityLiving().getCommandSenderWorld().isClientSide && event.getEntityLiving() instanceof Player && !(event.getEntityLiving() instanceof FakePlayer))
+        if(!event.getEntity().getCommandSenderWorld().isClientSide && event.getEntity() instanceof Player && !(event.getEntity() instanceof FakePlayer))
         {
-            ServerPlayer player = (ServerPlayer)event.getEntityLiving();
+            ServerPlayer player = (ServerPlayer)event.getEntity();
             if(player.gameMode.getGameModeForPlayer() == GameType.CREATIVE || player.gameMode.getGameModeForPlayer() == GameType.SPECTATOR)
             {
                 return;
@@ -40,7 +40,7 @@ public class EventHandler
             {
                 liveCount = LimitedLives.config.maxLives.get();
             }
-            tag.putDouble("healthOffset", event.getEntityLiving().getAttribute(Attributes.MAX_HEALTH).getBaseValue() - (20D - (20D * prevDeaths / (double)liveCount)));
+            tag.putDouble("healthOffset", event.getEntity().getAttribute(Attributes.MAX_HEALTH).getBaseValue() - (20D - (20D * prevDeaths / (double)liveCount)));
             tag.putInt("deathCount", prevDeaths + 1);
             tag.putInt("maxLives", LimitedLives.config.maxLives.get());
         }
@@ -49,12 +49,12 @@ public class EventHandler
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event)
     {
-        CompoundTag tag = EntityHelper.getPlayerPersistentData(event.getPlayer(), "LimitedLivesSave");
+        CompoundTag tag = EntityHelper.getPlayerPersistentData(event.getEntity(), "LimitedLivesSave");
         int deaths = tag.getInt("deathCount");
         if(deaths >= LimitedLives.config.maxLives.get())
         {
             //do ban
-            ServerPlayer player = (ServerPlayer)event.getPlayer();
+            ServerPlayer player = (ServerPlayer)event.getEntity();
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
             if(LimitedLives.config.banType.get() == LimitedLives.BanType.SPECTATOR || server.isSingleplayer() && server.getSingleplayerProfile().getName().equals(player.getName().getString()))
             {
@@ -74,7 +74,7 @@ public class EventHandler
         else if(LimitedLives.config.healthAdjust.get())
         {
             double nextHealth = Math.max(20 - (deaths / (double)LimitedLives.config.maxLives.get() * 20D) + tag.getDouble("healthOffset"), 1D);
-            event.getPlayer().getAttribute(Attributes.MAX_HEALTH).setBaseValue(nextHealth);
+            event.getEntity().getAttribute(Attributes.MAX_HEALTH).setBaseValue(nextHealth);
         }
     }
 
@@ -102,7 +102,7 @@ public class EventHandler
                         respawn = true;
                         if(LimitedLives.config.healthAdjust.get())
                         {
-                            player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20 + tag.getDouble("healthOffset"));
+                            player.getAttribute(Attributes.MAX_HEALTH).setBaseValue(20 + tag.getDouble("healthOffset")); //TODO use modifiers
                         }
                         player.gameMode.changeGameModeForPlayer(GameType.byId(tag.getInt("gameMode")));
                     }
