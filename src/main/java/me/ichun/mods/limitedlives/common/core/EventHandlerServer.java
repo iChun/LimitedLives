@@ -59,6 +59,10 @@ public abstract class EventHandlerServer
         {
             return;
         }
+        if(player.gameMode.getGameModeForPlayer() == GameType.CREATIVE || player.gameMode.getGameModeForPlayer() == GameType.SPECTATOR)
+        {
+            return;
+        }
 
         CompoundTag tag = getPlayerPersistentData(player, LL_PERSISTED_TAG);
         int deaths = tag.getInt("deathCount");

@@ -30,7 +30,7 @@ public class ConfigForge extends Config
             .defineInRange("healthAdjust", -1D, -20D, 20D);
         healthAdjust = new ConfigWrapper<>(cHealthAdjust::get, cHealthAdjust::set, cHealthAdjust::save);
 
-        final ForgeConfigSpec.DoubleValue cMaxHealthReduction = builder.comment("What's the maximum health reduction allowed before it caps out?")
+        final ForgeConfigSpec.DoubleValue cMaxHealthReduction = builder.comment("What's the maximum health reduction allowed before it caps out? Set to 0 to disable cap.")
             .translation("config.limitedlives.prop.maxHealthReduction.desc")
             .defineInRange("maxHealthReduction", 0D, -500D, 0D);
         maxHealthReduction = new ConfigWrapper<>(cMaxHealthReduction::get, cMaxHealthReduction::set, cMaxHealthReduction::save);

@@ -52,7 +52,7 @@ public class ConfigFabric extends Config
         @ConfigEntry.BoundedDouble(min = -20D, max = 20D)
         public double healthAdjust = -1D;
 
-        @ConfigEntry(nameKey = "config.limitedlives.prop.maxHealthReduction.name", descriptionKey = "config.limitedlives.prop.maxHealthReduction.desc", comment = "What's the maximum health reduction allowed before it caps out?")
+        @ConfigEntry(nameKey = "config.limitedlives.prop.maxHealthReduction.name", descriptionKey = "config.limitedlives.prop.maxHealthReduction.desc", comment = "What's the maximum health reduction allowed before it caps out? Set to 0 to disable cap.")
         @ConfigEntry.BoundedDouble(min = -500D, max = 0D)
         public double maxHealthReduction = 0D;
 
