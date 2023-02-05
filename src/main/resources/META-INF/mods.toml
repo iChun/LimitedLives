@@ -1,7 +1,7 @@
 modLoader="javafml"
-loaderVersion="[38,)" #forge version dep
+loaderVersion="[40,)" #forge version dep
 license="GNU Lesser General Public License v3.0"
-issueTrackerURL="https://github.com/iChun/Limited-Lives/issues"
+issueTrackerURL="https://github.com/iChun/LimitedLives/issues"
 
 [[mods]]
     modId="limitedlives"
@@ -16,7 +16,7 @@ issueTrackerURL="https://github.com/iChun/Limited-Lives/issues"
 [[dependencies.limitedlives]]
     modId="forge"
     mandatory=true
-    versionRange="[38,)"
+    versionRange="[40,)"
     ordering="NONE"
     side="BOTH"
 [[dependencies.limitedlives]]

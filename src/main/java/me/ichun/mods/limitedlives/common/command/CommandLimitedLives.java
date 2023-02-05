@@ -5,17 +5,16 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.ichun.mods.limitedlives.common.LimitedLives;
-import me.ichun.mods.limitedlives.common.core.EntityHelper;
+import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.server.command.TextComponentHelper;
 
-import static me.ichun.mods.limitedlives.common.core.EventHandler.FIVE_MINS_IN_MS;
-
-public class LimitedLivesCommand
+public class CommandLimitedLives
 {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher)
     {
@@ -32,39 +31,36 @@ public class LimitedLivesCommand
                                 ServerPlayer player = EntityArgument.getPlayer(source, "player");
                                 int deaths = IntegerArgumentType.getInteger(source, "deaths");
 
-                                CompoundTag tag = EntityHelper.getPlayerPersistentData(player, "LimitedLivesSave");
-                                tag.putInt("deathCount", deaths);
+                                LimitedLives.eventHandlerServer.setPlayerDeaths(player, deaths, false);
 
-                                source.getSource().sendSuccess(TextComponentHelper.createComponentTranslation(source.getSource().getEntity(), "limitedlives.setDeaths", player.getName().getContents(), deaths), true);
+                                source.getSource().sendSuccess(new TranslatableComponent("limitedlives.setDeaths", player.getName().getString(), deaths), true);
 
                                 return deaths;
-                            }))))
+                            })
+                        )
+                    )
+                )
             );
 
         //register alias.
         dispatcher.register(Commands.literal("limitedlives")
-            .executes((source) -> {
-                informLivesLeft(source);
-                return 0;
-            })
             .redirect(command));
     }
 
     private static void informLivesLeft(CommandContext<CommandSourceStack> source)
     {
-        if(source.getSource().getEntity() instanceof ServerPlayer)
+        if(source.getSource().getEntity() instanceof ServerPlayer player)
         {
-            ServerPlayer player = (ServerPlayer)source.getSource().getEntity();
-            CompoundTag tag = EntityHelper.getPlayerPersistentData(player, "LimitedLivesSave");
+            CompoundTag tag = LimitedLives.eventHandlerServer.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
             int deaths = tag.getInt("deathCount");
             if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banTime.get() > 0)
             {
-                int time = (int)Math.ceil((tag.getLong("banTime") + 1000L + (LimitedLives.config.banTime.get() * 1000L) - System.currentTimeMillis()) / (FIVE_MINS_IN_MS / 5F));
-                source.getSource().sendSuccess(TextComponentHelper.createComponentTranslation(player, time == 1 ? "limitedlives.respawnTimeLeftSingle" : "limitedlives.respawnTimeLeft", time), false);
+                int time = (int)Math.ceil((tag.getLong("banTime") + 1000L + (LimitedLives.config.banTime.get() * 1000L) - System.currentTimeMillis()) / (LimitedLives.eventHandlerServer.FIVE_MINS_IN_MS / 5F));
+                source.getSource().sendSuccess(new TranslatableComponent("limitedlives.respawnTimeLeft", time), false);
             }
             else
             {
-                source.getSource().sendSuccess(TextComponentHelper.createComponentTranslation(player, (LimitedLives.config.maxLives.get() - deaths) == 1 ? "limitedlives.livesLeftSingle" : "limitedlives.livesLeft", LimitedLives.config.maxLives.get() - deaths), false);
+                source.getSource().sendSuccess(new TranslatableComponent("limitedlives.livesLeft", LimitedLives.config.maxLives.get() - deaths), false);
             }
         }
     }
