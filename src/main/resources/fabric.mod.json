@@ -15,7 +15,7 @@
 
   "license": "GNU Lesser General Public License v3.0",
 
-  "environment": "client",
+  "environment": "*",
   "entrypoints": {
     "main": [
       "me.ichun.mods.limitedlives.loader.fabric.LoaderFabric"
