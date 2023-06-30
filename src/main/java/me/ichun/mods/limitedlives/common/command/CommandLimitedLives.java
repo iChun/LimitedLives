@@ -23,7 +23,7 @@ public class CommandLimitedLives
                     informLivesLeft(source);
                     return 0;
                 })
-                .then(Commands.literal("set")
+                .then(Commands.literal("set").requires((p) -> p.hasPermission(2))
                     .then(Commands.argument("player", EntityArgument.player())
                         .then(Commands.argument("deaths", IntegerArgumentType.integer(0))
                             .executes((source) -> {
