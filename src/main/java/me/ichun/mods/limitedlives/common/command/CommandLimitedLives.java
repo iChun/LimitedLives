@@ -32,7 +32,7 @@ public class CommandLimitedLives
 
                                 LimitedLives.eventHandlerServer.setPlayerDeaths(player, deaths, false);
 
-                                source.getSource().sendSuccess(Component.translatable("limitedlives.setDeaths", player.getName().getString(), deaths), true);
+                                source.getSource().sendSuccess(() -> Component.translatable("limitedlives.setDeaths", player.getName().getString(), deaths), true);
 
                                 return deaths;
                             })
@@ -55,11 +55,11 @@ public class CommandLimitedLives
             if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banTime.get() > 0)
             {
                 int time = (int)Math.ceil((tag.getLong("banTime") + 1000L + (LimitedLives.config.banTime.get() * 1000L) - System.currentTimeMillis()) / (LimitedLives.eventHandlerServer.FIVE_MINS_IN_MS / 5F));
-                source.getSource().sendSuccess(Component.translatable("limitedlives.respawnTimeLeft", time), false);
+                source.getSource().sendSuccess(() -> Component.translatable("limitedlives.respawnTimeLeft", time), false);
             }
             else
             {
-                source.getSource().sendSuccess(Component.translatable("limitedlives.livesLeft", LimitedLives.config.maxLives.get() - deaths), false);
+                source.getSource().sendSuccess(() -> Component.translatable("limitedlives.livesLeft", LimitedLives.config.maxLives.get() - deaths), false);
             }
         }
     }

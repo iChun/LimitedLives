@@ -25,7 +25,7 @@ public class EventHandlerServerFabric extends EventHandlerServer
 
         FabricEvents.PLAYER_TICK_END.register(player ->
         {
-            if(!player.level.isClientSide() && player.tickCount % 20 == 0)
+            if(!player.level().isClientSide() && player.tickCount % 20 == 0)
             {
                 super.onPlayerTickEnd(player);
             }

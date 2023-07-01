@@ -15,9 +15,9 @@ public class LoaderFabric extends LimitedLives
         //register config
         ConfigFabric configFabric = new ConfigFabric();
         config = configFabric;
-        Config modConfig = new Config(MOD_ID, new String[]{}, configFabric);
-        modConfig.load();
-        Runtime.getRuntime().addShutdownHook(new Thread(modConfig::save));
+        configFabric.configInstance = new Config(MOD_ID, new String[]{}, configFabric);
+        configFabric.configInstance.load();
+        Runtime.getRuntime().addShutdownHook(new Thread(configFabric.configInstance::save));
 
         LimitedLives.setEventHandlerServer(new EventHandlerServerFabric());
     }
