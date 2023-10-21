@@ -2,10 +2,13 @@ package me.ichun.mods.limitedlives.loader.fabric;
 
 import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+
+import java.util.Locale;
 
 public class EventHandlerServerFabric extends EventHandlerServer
 {
@@ -49,6 +52,6 @@ public class EventHandlerServerFabric extends EventHandlerServer
     @Override
     public boolean isFakePlayer(ServerPlayer player)
     {
-        return player.connection == null;
+        return player instanceof FakePlayer || player.connection == null || player.getClass().getSimpleName().toLowerCase(Locale.ROOT).contains("fakeplayer");
     }
 }

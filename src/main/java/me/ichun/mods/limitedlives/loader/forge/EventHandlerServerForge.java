@@ -3,13 +3,14 @@ package me.ichun.mods.limitedlives.loader.forge;
 import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.Locale;
 
 public class EventHandlerServerForge extends EventHandlerServer
 {
@@ -58,6 +59,6 @@ public class EventHandlerServerForge extends EventHandlerServer
     @Override
     public boolean isFakePlayer(ServerPlayer player)
     {
-        return player instanceof FakePlayer || player.connection == null; // || player.getName().getUnformattedComponentText().toLowerCase().startsWith("fakeplayer") || player.getName().getUnformattedComponentText().toLowerCase().startsWith("[minecraft]");
+        return player.connection == null || player.getClass().getSimpleName().toLowerCase(Locale.ROOT).contains("fakeplayer");
     }
 }
