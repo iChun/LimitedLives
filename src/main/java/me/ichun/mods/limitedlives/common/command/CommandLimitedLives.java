@@ -34,7 +34,12 @@ public class CommandLimitedLives
 
                                 source.getSource().sendSuccess(() -> Component.translatable("limitedlives.setDeaths", player.getName().getString(), deaths), true);
 
-                                return deaths;
+                                if(player != source.getSource().getPlayer())
+                                {
+                                    player.sendSystemMessage(Component.translatable("limitedlives.setDeaths", player.getName().getString(), deaths));
+                                }
+
+                                return 1;
                             })
                         )
                     )

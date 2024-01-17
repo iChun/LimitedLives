@@ -83,7 +83,7 @@ public abstract class EventHandlerServer
             }
             else
             {
-                UserBanListEntry userlistbansentry = new UserBanListEntry(player.getGameProfile(), null, LimitedLives.MOD_NAME, LimitedLives.config.banTime.get() == 0 ? null : new Date(System.currentTimeMillis() + (LimitedLives.config.banTime.get() * 1000L)), Component.translatable("limitedlives.banReason").toString());
+                UserBanListEntry userlistbansentry = new UserBanListEntry(player.getGameProfile(), null, LimitedLives.MOD_NAME, LimitedLives.config.banTime.get() == 0 ? null : new Date(System.currentTimeMillis() + (LimitedLives.config.banTime.get() * 1000L)), Component.translatable("limitedlives.banReason").getString());
                 server.getPlayerList().getBans().add(userlistbansentry);
                 player.connection.disconnect(Component.translatable("limitedlives.banKickReason"));
             }
@@ -116,26 +116,31 @@ public abstract class EventHandlerServer
                 if((new Date(banTime + (LimitedLives.config.banTime.get() * 1000L))).before(new Date()) || player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR) //later is to say, player was pardoned by an op.
                 {
                     //time to "unban"
-                    boolean respawn = false;
-                    if(player.gameMode.getGameModeForPlayer() == GameType.SPECTATOR)
-                    {
-                        respawn = true;
-
-                        player.gameMode.changeGameModeForPlayer(GameType.byId(tag.getInt("gameMode")));
-
-                        AttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
-                        attribute.removePermanentModifier(HEALTH_MODIFIER_UUID);
-                    }
-
-                    tag.remove("deathCount");
-                    tag.remove("gameMode");
-                    tag.remove("banTime");
-                    if(respawn)
-                    {
-                        player.connection.player = player.getServer().getPlayerList().respawn(player, false); // recreatePlayerEntity
-                    }
+                    pardon(player, tag);
                 }
             }
+        }
+    }
+
+    public void pardon(ServerPlayer player, CompoundTag tag)
+    {
+        boolean respawn = false;
+        if(player.gameMode.getGameModeForPlayer() == GameType.SPECTATOR)
+        {
+            respawn = true;
+
+            player.gameMode.changeGameModeForPlayer(GameType.byId(tag.getInt("gameMode")));
+
+            AttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
+            attribute.removePermanentModifier(HEALTH_MODIFIER_UUID);
+        }
+
+        tag.remove("deathCount");
+        tag.remove("gameMode");
+        tag.remove("banTime");
+        if(respawn)
+        {
+            player.connection.player = player.getServer().getPlayerList().respawn(player, false); // recreatePlayerEntity
         }
     }
 
