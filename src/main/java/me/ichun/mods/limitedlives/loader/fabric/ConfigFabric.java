@@ -18,7 +18,7 @@ public class ConfigFabric extends Config
     {
         maxLives = new ConfigWrapper<>(() -> GENERAL.maxLives, v -> GENERAL.maxLives = v);
         banType = new ConfigWrapper<>(() -> GENERAL.banType, v -> GENERAL.banType = v);
-        banTime = new ConfigWrapper<>(() -> GENERAL.banTime, v -> GENERAL.banTime = v);
+        banDuration = new ConfigWrapper<>(() -> GENERAL.banTime, v -> GENERAL.banTime = v);
         healthAdjust = new ConfigWrapper<>(() -> GENERAL.healthAdjust, v -> GENERAL.healthAdjust = v);
         maxHealthReduction = new ConfigWrapper<>(() -> GENERAL.maxHealthReduction, v -> GENERAL.maxHealthReduction = v);
         announceOnRespawn = new ConfigWrapper<>(() -> GENERAL.announceOnRespawn, v -> GENERAL.announceOnRespawn = v);

@@ -11,7 +11,11 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.GameType;
+
+import java.util.Date;
 
 public class CommandLimitedLives
 {
@@ -44,6 +48,37 @@ public class CommandLimitedLives
                         )
                     )
                 )
+                .then(Commands.literal("pardon").requires((p) -> p.hasPermission(2))
+                    .then(Commands.argument("player", EntityArgument.player())
+                        .executes((source) -> {
+                            ServerPlayer player = EntityArgument.getPlayer(source, "player");
+
+                            MutableComponent outcomeText;
+
+                            CompoundTag tag = LimitedLives.eventHandlerServer.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
+                            int deaths = tag.getInt("deathCount");
+                            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0 && player.isAlive()) //is "banned, config has ban > 0 (not permaban), player is alive
+                            {
+                                LimitedLives.eventHandlerServer.pardon(player, tag);
+
+                                outcomeText = Component.translatable("limitedlives.pardoned", player.getName().getString());
+                            }
+                            else
+                            {
+                                outcomeText = Component.translatable("limitedlives.notBanned", player.getName().getString());
+                            }
+
+                            source.getSource().sendSuccess(() -> outcomeText, true);
+
+                            if(player != source.getSource().getPlayer())
+                            {
+                                player.sendSystemMessage(outcomeText);
+                            }
+
+                            return 1;
+                        })
+                    )
+                )
             );
 
         //register alias.
@@ -57,9 +92,9 @@ public class CommandLimitedLives
         {
             CompoundTag tag = LimitedLives.eventHandlerServer.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
             int deaths = tag.getInt("deathCount");
-            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banTime.get() > 0)
+            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0)
             {
-                int time = (int)Math.ceil((tag.getLong("banTime") + 1000L + (LimitedLives.config.banTime.get() * 1000L) - System.currentTimeMillis()) / (LimitedLives.eventHandlerServer.FIVE_MINS_IN_MS / 5F));
+                int time = (int)Math.ceil((tag.getLong("banTime") + 1000L + (LimitedLives.config.banDuration.get() * 1000L) - System.currentTimeMillis()) / (LimitedLives.eventHandlerServer.FIVE_MINS_IN_MS / 5F));
                 source.getSource().sendSuccess(() -> Component.translatable("limitedlives.respawnTimeLeft", time), false);
             }
             else

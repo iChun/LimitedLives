@@ -76,14 +76,14 @@ public abstract class EventHandlerServer
             if(LimitedLives.config.banType.get() == LimitedLives.BanType.SPECTATOR || server.isSingleplayer() && server.getSingleplayerProfile().getName().equals(player.getName().getString()))
             {
                 tag.putInt("gameMode", player.gameMode.getGameModeForPlayer().getId());
-                tag.putLong("banTime", System.currentTimeMillis());
+                tag.putLong("timeBanned", System.currentTimeMillis());
                 player.setGameMode(GameType.SPECTATOR);
                 player.fallDistance = 0.0F;
-                player.displayClientMessage(LimitedLives.config.banTime.get() == 0 ? Component.translatable("limitedlives.spectateForcePerma") : Component.translatable("limitedlives.spectateForce", LimitedLives.config.banTime.get()), false);
+                player.displayClientMessage(LimitedLives.config.banDuration.get() == 0 ? Component.translatable("limitedlives.spectateForcePerma") : Component.translatable("limitedlives.spectateForce", LimitedLives.config.banDuration.get()), false);
             }
             else
             {
-                UserBanListEntry userlistbansentry = new UserBanListEntry(player.getGameProfile(), null, LimitedLives.MOD_NAME, LimitedLives.config.banTime.get() == 0 ? null : new Date(System.currentTimeMillis() + (LimitedLives.config.banTime.get() * 1000L)), Component.translatable("limitedlives.banReason").getString());
+                UserBanListEntry userlistbansentry = new UserBanListEntry(player.getGameProfile(), null, LimitedLives.MOD_NAME, LimitedLives.config.banDuration.get() == 0 ? null : new Date(System.currentTimeMillis() + (LimitedLives.config.banDuration.get() * 1000L)), Component.translatable("limitedlives.banReason").getString());
                 server.getPlayerList().getBans().add(userlistbansentry);
                 player.connection.disconnect(Component.translatable("limitedlives.banKickReason"));
             }
@@ -106,14 +106,15 @@ public abstract class EventHandlerServer
         {
             CompoundTag tag = getPlayerPersistentData(player, LL_PERSISTED_TAG);
             int deaths = tag.getInt("deathCount");
-            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banTime.get() > 0 && player.isAlive())
+            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0 && player.isAlive()) //is "banned, config has ban > 0 (not permaban), player is alive
             {
-                long banTime = tag.getLong("banTime");
-                if((banTime + (LimitedLives.config.banTime.get() * 1000L) - System.currentTimeMillis()) % FIVE_MINS_IN_MS > (banTime + 1000L + (LimitedLives.config.banTime.get() * 1000L) - System.currentTimeMillis()) % FIVE_MINS_IN_MS && banTime + 1000L + (LimitedLives.config.banTime.get() * 1000L) - System.currentTimeMillis() > FIVE_MINS_IN_MS && player.gameMode.getGameModeForPlayer() == GameType.SPECTATOR)
+                long timeBanned = tag.getLong("timeBanned");
+                //I gave up reading this if statement. what?
+                if((timeBanned + (LimitedLives.config.banDuration.get() * 1000L) - System.currentTimeMillis()) % FIVE_MINS_IN_MS > (timeBanned + 1000L + (LimitedLives.config.banDuration.get() * 1000L) - System.currentTimeMillis()) % FIVE_MINS_IN_MS && timeBanned + 1000L + (LimitedLives.config.banDuration.get() * 1000L) - System.currentTimeMillis() > FIVE_MINS_IN_MS && player.gameMode.getGameModeForPlayer() == GameType.SPECTATOR)
                 {
-                    player.displayClientMessage(Component.translatable("limitedlives.respawnTimeLeft", (int)Math.ceil((banTime + (LimitedLives.config.banTime.get() * 1000L) - System.currentTimeMillis()) / (float)FIVE_MINS_IN_MS * 5F)), false);
+                    player.displayClientMessage(Component.translatable("limitedlives.respawnTimeLeft", (int)Math.ceil((timeBanned + (LimitedLives.config.banDuration.get() * 1000L) - System.currentTimeMillis()) / (float)FIVE_MINS_IN_MS * 5F)), false);
                 }
-                if((new Date(banTime + (LimitedLives.config.banTime.get() * 1000L))).before(new Date()) || player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR) //later is to say, player was pardoned by an op.
+                if((new Date(timeBanned + (LimitedLives.config.banDuration.get() * 1000L))).before(new Date()) || player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR) //later is to say, player was pardoned by an op.
                 {
                     //time to "unban"
                     pardon(player, tag);
@@ -137,7 +138,7 @@ public abstract class EventHandlerServer
 
         tag.remove("deathCount");
         tag.remove("gameMode");
-        tag.remove("banTime");
+        tag.remove("timeBanned");
         if(respawn)
         {
             player.connection.player = player.getServer().getPlayerList().respawn(player, false); // recreatePlayerEntity

@@ -23,7 +23,7 @@ public class ConfigForge extends Config
         final ForgeConfigSpec.IntValue cBanTime = builder.comment("Length of time the player is banned (in seconds). Set to 0 to permaban.")
             .translation("config.limitedlives.prop.banTime.desc")
             .defineInRange("banTime", 5 * 60, 0, Integer.MAX_VALUE);
-        banTime = new ConfigWrapper<>(cBanTime::get, cBanTime::set, cBanTime::save);
+        banDuration = new ConfigWrapper<>(cBanTime::get, cBanTime::set, cBanTime::save);
 
         final ForgeConfigSpec.DoubleValue cHealthAdjust = builder.comment("How much health to change per death.")
             .translation("config.limitedlives.prop.healthAdjust.desc")

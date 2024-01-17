@@ -3,8 +3,8 @@
   "config.limitedlives.prop.maxLives.desc": "Maximum lives a player can have before being \"banned\".",
   "config.limitedlives.prop.banType.name": "Ban Type",
   "config.limitedlives.prop.banType.desc": "Ban type once the player dies too many times.\nAccepts: SPECTATOR, BAN",
-  "config.limitedlives.prop.banTime.name": "Ban Time",
-  "config.limitedlives.prop.banTime.desc": "Length of time the player is banned (in seconds). Set to 0 to permaban.",
+  "config.limitedlives.prop.banDuration.name": "Ban Duration",
+  "config.limitedlives.prop.banDuration.desc": "Length of time the player is banned (in seconds). Set to 0 to permaban.",
   "config.limitedlives.prop.healthAdjust.name": "Health Adjust",
   "config.limitedlives.prop.healthAdjust.desc": "How much health to change per death.",
   "config.limitedlives.prop.maxHealthReduction.name": "Max Health Reduction",
@@ -19,5 +19,7 @@
   "limitedlives.respawned": "You have respawned. Welcome back!",
   "limitedlives.respawnTimeLeft": "You have %s more minute(s) before respawning.",
   "limitedlives.livesLeft": "You have %s live(s) remaining.",
-  "limitedlives.setDeaths": "Set %s's deaths to %s."
+  "limitedlives.setDeaths": "Set %s's deaths to %s.",
+  "limitedlives.pardoned": "%s has been pardoned.",
+  "limitedlives.notBanned": "%s is not currently banned."
 }
