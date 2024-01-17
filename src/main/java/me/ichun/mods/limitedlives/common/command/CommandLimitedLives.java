@@ -36,12 +36,7 @@ public class CommandLimitedLives
 
                                 LimitedLives.eventHandlerServer.setPlayerDeaths(player, deaths, false);
 
-                                source.getSource().sendSuccess(() -> Component.translatable("limitedlives.setDeaths", player.getName().getString(), deaths), true);
-
-                                if(player != source.getSource().getPlayer())
-                                {
-                                    player.sendSystemMessage(Component.translatable("limitedlives.setDeaths", player.getName().getString(), deaths));
-                                }
+                                sendCommandOutput(source, player, Component.translatable("limitedlives.setDeaths", player.getName().getString(), deaths));
 
                                 return 1;
                             })
@@ -53,26 +48,17 @@ public class CommandLimitedLives
                         .executes((source) -> {
                             ServerPlayer player = EntityArgument.getPlayer(source, "player");
 
-                            MutableComponent outcomeText;
-
                             CompoundTag tag = LimitedLives.eventHandlerServer.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
                             int deaths = tag.getInt("deathCount");
                             if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0 && player.isAlive()) //is "banned, config has ban > 0 (not permaban), player is alive
                             {
-                                LimitedLives.eventHandlerServer.pardon(player, tag);
+                                sendCommandOutput(source, player, Component.translatable("limitedlives.pardoned", player.getName().getString()));
 
-                                outcomeText = Component.translatable("limitedlives.pardoned", player.getName().getString());
+                                LimitedLives.eventHandlerServer.pardon(player, tag);
                             }
                             else
                             {
-                                outcomeText = Component.translatable("limitedlives.notBanned", player.getName().getString());
-                            }
-
-                            source.getSource().sendSuccess(() -> outcomeText, true);
-
-                            if(player != source.getSource().getPlayer())
-                            {
-                                player.sendSystemMessage(outcomeText);
+                                sendCommandOutput(source, player, Component.translatable("limitedlives.notBanned", player.getName().getString()));
                             }
 
                             return 1;
@@ -86,6 +72,17 @@ public class CommandLimitedLives
             .redirect(command));
     }
 
+    private static void sendCommandOutput(CommandContext<CommandSourceStack> source, ServerPlayer player, MutableComponent outcomeText)
+    {
+        source.getSource().sendSuccess(() -> outcomeText, true);
+
+        if(player != source.getSource().getPlayer())
+        {
+            player.sendSystemMessage(outcomeText);
+        }
+    }
+
+
     private static void informLivesLeft(CommandContext<CommandSourceStack> source)
     {
         if(source.getSource().getEntity() instanceof ServerPlayer player)
@@ -94,8 +91,12 @@ public class CommandLimitedLives
             int deaths = tag.getInt("deathCount");
             if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0)
             {
-                int time = (int)Math.ceil((tag.getLong("banTime") + 1000L + (LimitedLives.config.banDuration.get() * 1000L) - System.currentTimeMillis()) / (LimitedLives.eventHandlerServer.FIVE_MINS_IN_MS / 5F));
-                source.getSource().sendSuccess(() -> Component.translatable("limitedlives.respawnTimeLeft", time), false);
+                long timeBanned = tag.getLong("timeBanned");
+                long banDurationMs = (LimitedLives.config.banDuration.get() * 1000L);
+                long timeBanDone = System.currentTimeMillis() - timeBanned; // in MS
+                long timeBanLeft = banDurationMs - timeBanDone;
+
+                source.getSource().sendSuccess(() -> Component.translatable("limitedlives.respawnTimeLeft", (int)Math.ceil(timeBanLeft / 60000F)), false);
             }
             else
             {

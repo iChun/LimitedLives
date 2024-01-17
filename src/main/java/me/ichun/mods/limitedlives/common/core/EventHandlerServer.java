@@ -28,7 +28,6 @@ public abstract class EventHandlerServer
 {
     public static final String PLAYER_PERSISTED_NBT_TAG = "PlayerPersisted"; //As per Forge.
 
-    public static final int FIVE_MINS_IN_MS = 5 * 60 * 1000;
     public static final String LL_PERSISTED_TAG = "LimitedLivesSave";
 
     public static final UUID HEALTH_MODIFIER_UUID = Mth.createInsecureUUID(RandomSource.create("Limited Lives Attribute Modifier ID".hashCode() * 57659L));
@@ -88,12 +87,13 @@ public abstract class EventHandlerServer
                 player.connection.disconnect(Component.translatable("limitedlives.banKickReason"));
             }
         }
-        else if(LimitedLives.config.healthAdjust.get() != 0D)
+        else
         {
             setPlayerDeaths(player, deaths, true);
 
             if(LimitedLives.config.announceOnRespawn.get())
             {
+                player.displayClientMessage(Component.translatable("limitedlives.welcomeBack"), false);
                 player.displayClientMessage(Component.translatable("limitedlives.livesLeft", LimitedLives.config.maxLives.get() - deaths), false);
             }
         }
@@ -109,12 +109,17 @@ public abstract class EventHandlerServer
             if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0 && player.isAlive()) //is "banned, config has ban > 0 (not permaban), player is alive
             {
                 long timeBanned = tag.getLong("timeBanned");
-                //I gave up reading this if statement. what?
-                if((timeBanned + (LimitedLives.config.banDuration.get() * 1000L) - System.currentTimeMillis()) % FIVE_MINS_IN_MS > (timeBanned + 1000L + (LimitedLives.config.banDuration.get() * 1000L) - System.currentTimeMillis()) % FIVE_MINS_IN_MS && timeBanned + 1000L + (LimitedLives.config.banDuration.get() * 1000L) - System.currentTimeMillis() > FIVE_MINS_IN_MS && player.gameMode.getGameModeForPlayer() == GameType.SPECTATOR)
+                long banDurationMs = (LimitedLives.config.banDuration.get() * 1000L);
+                long timeBanDone = System.currentTimeMillis() - timeBanned; // in MS
+                long timeBanLeft = banDurationMs - timeBanDone;
+
+                int announceTimeFrequency = LimitedLives.config.timeRemainingMessageFrequency.get() * 60 * 1000;
+                //if timeBanLeft mod 5 mins is more than timeBanLeft + 1 second, it just hit 5 mins round, send message if timeBanLeft + 1s is > 5 mins still.
+                if(announceTimeFrequency > 0 && timeBanLeft % announceTimeFrequency > (timeBanLeft + 1000L) % announceTimeFrequency && (timeBanLeft + 1000L) > announceTimeFrequency && player.gameMode.getGameModeForPlayer() == GameType.SPECTATOR)
                 {
-                    player.displayClientMessage(Component.translatable("limitedlives.respawnTimeLeft", (int)Math.ceil((timeBanned + (LimitedLives.config.banDuration.get() * 1000L) - System.currentTimeMillis()) / (float)FIVE_MINS_IN_MS * 5F)), false);
+                    player.displayClientMessage(Component.translatable("limitedlives.respawnTimeLeft", (int)Math.ceil(timeBanLeft / 60000F)), false);
                 }
-                if((new Date(timeBanned + (LimitedLives.config.banDuration.get() * 1000L))).before(new Date()) || player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR) //later is to say, player was pardoned by an op.
+                if((new Date(timeBanned + banDurationMs)).before(new Date()) || player.gameMode.getGameModeForPlayer() != GameType.SPECTATOR) //later is to say, player was pardoned by an op.
                 {
                     //time to "unban"
                     pardon(player, tag);

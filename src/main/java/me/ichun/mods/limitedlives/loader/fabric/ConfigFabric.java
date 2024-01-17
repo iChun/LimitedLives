@@ -18,7 +18,8 @@ public class ConfigFabric extends Config
     {
         maxLives = new ConfigWrapper<>(() -> GENERAL.maxLives, v -> GENERAL.maxLives = v);
         banType = new ConfigWrapper<>(() -> GENERAL.banType, v -> GENERAL.banType = v);
-        banDuration = new ConfigWrapper<>(() -> GENERAL.banTime, v -> GENERAL.banTime = v);
+        banDuration = new ConfigWrapper<>(() -> GENERAL.banDuration, v -> GENERAL.banDuration = v);
+        timeRemainingMessageFrequency = new ConfigWrapper<>(() -> GENERAL.timeRemainingMessageFrequency, v -> GENERAL.timeRemainingMessageFrequency = v);
         healthAdjust = new ConfigWrapper<>(() -> GENERAL.healthAdjust, v -> GENERAL.healthAdjust = v);
         maxHealthReduction = new ConfigWrapper<>(() -> GENERAL.maxHealthReduction, v -> GENERAL.maxHealthReduction = v);
         announceOnRespawn = new ConfigWrapper<>(() -> GENERAL.announceOnRespawn, v -> GENERAL.announceOnRespawn = v);
@@ -46,9 +47,13 @@ public class ConfigFabric extends Config
         @ConfigEntry(nameKey = "prop.banType.name", descriptionKey = "prop.banType.desc", comment = "Ban type once the player dies too many times.\nAccepts: SPECTATOR, BAN")
         public LimitedLives.BanType banType = LimitedLives.BanType.SPECTATOR;
 
-        @ConfigEntry(nameKey = "prop.banTime.name", descriptionKey = "prop.banTime.desc", comment = "Length of time the player is banned (in seconds). Set to 0 to permaban.")
+        @ConfigEntry(nameKey = "prop.banDuration.name", descriptionKey = "prop.banDuration.desc", comment = "Length of time the player is banned (in seconds). Set to 0 to permaban.")
         @ConfigEntry.BoundedInteger(min = 0)
-        public int banTime = 5 * 60;
+        public int banDuration = 5 * 60;
+
+        @ConfigEntry(nameKey = "prop.timeRemainingMessageFrequency.name", descriptionKey = "prop.timeRemainingMessageFrequency.desc", comment = "Length of time (in minutes) between messages announcing time remaining of ban. Set to 0 to disable.")
+        @ConfigEntry.BoundedInteger(min = 0)
+        public int timeRemainingMessageFrequency = 5;
 
         @ConfigEntry(nameKey = "prop.healthAdjust.name", descriptionKey = "prop.healthAdjust.desc", comment = "How much health to change per death.")
         @ConfigEntry.BoundedDouble(min = -20D, max = 20D)

@@ -20,10 +20,15 @@ public class ConfigForge extends Config
             .defineEnum("banType", LimitedLives.BanType.SPECTATOR);
         banType = new ConfigWrapper<>(cBanType::get, cBanType::set, cBanType::save);
 
-        final ForgeConfigSpec.IntValue cBanTime = builder.comment("Length of time the player is banned (in seconds). Set to 0 to permaban.")
-            .translation("config.limitedlives.prop.banTime.desc")
-            .defineInRange("banTime", 5 * 60, 0, Integer.MAX_VALUE);
-        banDuration = new ConfigWrapper<>(cBanTime::get, cBanTime::set, cBanTime::save);
+        final ForgeConfigSpec.IntValue cBanDuration = builder.comment("Length of time the player is banned (in seconds). Set to 0 to permaban.")
+            .translation("config.limitedlives.prop.banDuration.desc")
+            .defineInRange("banDuration", 5 * 60, 0, Integer.MAX_VALUE);
+        banDuration = new ConfigWrapper<>(cBanDuration::get, cBanDuration::set, cBanDuration::save);
+
+        final ForgeConfigSpec.IntValue cTimeRemainingMessageFrequency = builder.comment("Length of time the player is banned (in seconds). Set to 0 to permaban.")
+            .translation("config.limitedlives.prop.timeRemainingMessageFrequency.desc")
+            .defineInRange("timeRemainingMessageFrequency", 5, 0, Integer.MAX_VALUE);
+        timeRemainingMessageFrequency = new ConfigWrapper<>(cTimeRemainingMessageFrequency::get, cTimeRemainingMessageFrequency::set, cTimeRemainingMessageFrequency::save);
 
         final ForgeConfigSpec.DoubleValue cHealthAdjust = builder.comment("How much health to change per death.")
             .translation("config.limitedlives.prop.healthAdjust.desc")
