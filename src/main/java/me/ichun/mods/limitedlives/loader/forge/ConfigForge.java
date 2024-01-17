@@ -25,7 +25,12 @@ public class ConfigForge extends Config
             .defineInRange("banDuration", 5 * 60, 0, Integer.MAX_VALUE);
         banDuration = new ConfigWrapper<>(cBanDuration::get, cBanDuration::set, cBanDuration::save);
 
-        final ForgeConfigSpec.IntValue cTimeRemainingMessageFrequency = builder.comment("Length of time the player is banned (in seconds). Set to 0 to permaban.")
+        final ForgeConfigSpec.IntValue cTimeToNewLife = builder.comment("Length of time (in minutes) between messages announcing time remaining of ban. Set to 0 to disable.")
+            .translation("config.limitedlives.prop.timeToNewLife.desc")
+            .defineInRange("timeToNewLife", 0, 0, Integer.MAX_VALUE);
+        timeToNewLife = new ConfigWrapper<>(cTimeToNewLife::get, cTimeToNewLife::set, cTimeToNewLife::save);
+
+        final ForgeConfigSpec.IntValue cTimeRemainingMessageFrequency = builder.comment("Length of time (in seconds) the player is banned. Set to 0 to permaban.")
             .translation("config.limitedlives.prop.timeRemainingMessageFrequency.desc")
             .defineInRange("timeRemainingMessageFrequency", 5, 0, Integer.MAX_VALUE);
         timeRemainingMessageFrequency = new ConfigWrapper<>(cTimeRemainingMessageFrequency::get, cTimeRemainingMessageFrequency::set, cTimeRemainingMessageFrequency::save);

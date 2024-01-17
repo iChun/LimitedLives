@@ -49,6 +49,7 @@ public abstract class EventHandlerServer
             }
             CompoundTag tag = getPlayerPersistentData(player, LL_PERSISTED_TAG);
             tag.putInt("deathCount", tag.getInt("deathCount") + 1); //Save the death count
+            tag.putLong("lastDeath", System.currentTimeMillis());
         }
     }
 
@@ -93,7 +94,6 @@ public abstract class EventHandlerServer
 
             if(LimitedLives.config.announceOnRespawn.get())
             {
-                player.displayClientMessage(Component.translatable("limitedlives.welcomeBack"), false);
                 player.displayClientMessage(Component.translatable("limitedlives.livesLeft", LimitedLives.config.maxLives.get() - deaths), false);
             }
         }
@@ -106,6 +106,23 @@ public abstract class EventHandlerServer
         {
             CompoundTag tag = getPlayerPersistentData(player, LL_PERSISTED_TAG);
             int deaths = tag.getInt("deathCount");
+            if(LimitedLives.config.timeToNewLife.get() > 0 && tag.contains("lastDeath") && deaths > 0) //calculate if it's time to give a new life
+            {
+                long timeOfLastDeath = tag.getLong("lastDeath");
+                long timeSinceLastDeath = System.currentTimeMillis() - timeOfLastDeath;
+                int timeToNewLifeMs = LimitedLives.config.timeToNewLife.get() * 1000;
+                if(timeSinceLastDeath >= timeToNewLifeMs)
+                {
+                    int livesToGive = Mth.clamp((int)Math.floor((double)timeSinceLastDeath / timeToNewLifeMs), 0, LimitedLives.config.maxLives.get() - deaths);
+
+                    deaths = Mth.clamp(deaths - livesToGive, 0, Integer.MAX_VALUE);
+                    tag.putInt("deathCount", deaths);
+                    tag.putLong("lastDeath", System.currentTimeMillis());
+
+                    player.displayClientMessage(Component.translatable("limitedlives.livesRegained", livesToGive, LimitedLives.config.maxLives.get() - deaths), false);
+                }
+            }
+
             if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0 && player.isAlive()) //is "banned, config has ban duration > 0 (not permaban), player is alive
             {
                 long timeBanned = tag.getLong("timeBanned");
@@ -142,11 +159,13 @@ public abstract class EventHandlerServer
         }
 
         tag.remove("deathCount");
+        tag.remove("lastDeath");
         tag.remove("gameMode");
         tag.remove("timeBanned");
         if(respawn)
         {
             player.connection.player = player.getServer().getPlayerList().respawn(player, false); // recreatePlayerEntity
+            player.displayClientMessage(Component.translatable("limitedlives.respawned"), false);
         }
     }
 
@@ -172,6 +191,7 @@ public abstract class EventHandlerServer
     {
         CompoundTag tag = LimitedLives.eventHandlerServer.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
         tag.putInt("deathCount", deaths);
+        tag.putLong("lastDeath", System.currentTimeMillis());
 
         if(LimitedLives.config.healthAdjust.get() != 0D)
         {

@@ -19,6 +19,7 @@ public class ConfigFabric extends Config
         maxLives = new ConfigWrapper<>(() -> GENERAL.maxLives, v -> GENERAL.maxLives = v);
         banType = new ConfigWrapper<>(() -> GENERAL.banType, v -> GENERAL.banType = v);
         banDuration = new ConfigWrapper<>(() -> GENERAL.banDuration, v -> GENERAL.banDuration = v);
+        timeToNewLife = new ConfigWrapper<>(() -> GENERAL.timeToNewLife, v -> GENERAL.timeToNewLife = v);
         timeRemainingMessageFrequency = new ConfigWrapper<>(() -> GENERAL.timeRemainingMessageFrequency, v -> GENERAL.timeRemainingMessageFrequency = v);
         healthAdjust = new ConfigWrapper<>(() -> GENERAL.healthAdjust, v -> GENERAL.healthAdjust = v);
         maxHealthReduction = new ConfigWrapper<>(() -> GENERAL.maxHealthReduction, v -> GENERAL.maxHealthReduction = v);
@@ -47,9 +48,13 @@ public class ConfigFabric extends Config
         @ConfigEntry(nameKey = "prop.banType.name", descriptionKey = "prop.banType.desc", comment = "Ban type once the player dies too many times.\nAccepts: SPECTATOR, BAN")
         public LimitedLives.BanType banType = LimitedLives.BanType.SPECTATOR;
 
-        @ConfigEntry(nameKey = "prop.banDuration.name", descriptionKey = "prop.banDuration.desc", comment = "Length of time the player is banned (in seconds). Set to 0 to permaban.")
+        @ConfigEntry(nameKey = "prop.banDuration.name", descriptionKey = "prop.banDuration.desc", comment = "Length of time (in seconds) the player is banned. Set to 0 to permaban.")
         @ConfigEntry.BoundedInteger(min = 0)
         public int banDuration = 5 * 60;
+
+        @ConfigEntry(nameKey = "prop.timeToNewLife.name", descriptionKey = "prop.timeToNewLife.desc", comment = "Length of time (in seconds) since last death for the player to regain a life. Set to 0 to disable.")
+        @ConfigEntry.BoundedInteger(min = 0)
+        public int timeToNewLife = 0;
 
         @ConfigEntry(nameKey = "prop.timeRemainingMessageFrequency.name", descriptionKey = "prop.timeRemainingMessageFrequency.desc", comment = "Length of time (in minutes) between messages announcing time remaining of ban. Set to 0 to disable.")
         @ConfigEntry.BoundedInteger(min = 0)

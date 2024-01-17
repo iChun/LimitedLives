@@ -10,6 +10,7 @@ public abstract class Config
     public ConfigWrapper<Integer> maxLives;
     public ConfigWrapper<LimitedLives.BanType> banType;
     public ConfigWrapper<Integer> banDuration;
+    public ConfigWrapper<Integer> timeToNewLife;
     public ConfigWrapper<Integer> timeRemainingMessageFrequency;
     public ConfigWrapper<Double> healthAdjust;
     public ConfigWrapper<Double> maxHealthReduction;
