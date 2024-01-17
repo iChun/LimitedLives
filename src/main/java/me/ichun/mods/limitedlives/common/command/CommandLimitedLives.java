@@ -43,6 +43,25 @@ public class CommandLimitedLives
                         )
                     )
                 )
+                .then(Commands.literal("add").requires((p) -> p.hasPermission(2))
+                    .then(Commands.argument("player", EntityArgument.player())
+                        .then(Commands.argument("deaths", IntegerArgumentType.integer())
+                            .executes((source) -> {
+                                ServerPlayer player = EntityArgument.getPlayer(source, "player");
+                                int deathsArg = IntegerArgumentType.getInteger(source, "deaths");
+
+                                CompoundTag tag = LimitedLives.eventHandlerServer.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
+                                int deaths = tag.getInt("deathCount");
+
+                                LimitedLives.eventHandlerServer.setPlayerDeaths(player, deaths + deathsArg, false);
+
+                                sendCommandOutput(source, player, Component.translatable("limitedlives.addDeaths", deathsArg, player.getName().getString(), deaths + deathsArg));
+
+                                return 1;
+                            })
+                        )
+                    )
+                )
                 .then(Commands.literal("pardon").requires((p) -> p.hasPermission(2))
                     .then(Commands.argument("player", EntityArgument.player())
                         .executes((source) -> {
@@ -50,7 +69,7 @@ public class CommandLimitedLives
 
                             CompoundTag tag = LimitedLives.eventHandlerServer.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
                             int deaths = tag.getInt("deathCount");
-                            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0 && player.isAlive()) //is "banned, config has ban > 0 (not permaban), player is alive
+                            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0 && player.isAlive()) //is "banned, config has ban duration > 0 (not permaban), player is alive
                             {
                                 sendCommandOutput(source, player, Component.translatable("limitedlives.pardoned", player.getName().getString()));
 

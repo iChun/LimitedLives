@@ -22,6 +22,7 @@
   "limitedlives.respawnTimeLeft": "You have %s more minute(s) before respawning.",
   "limitedlives.livesLeft": "You have %s live(s) remaining.",
   "limitedlives.setDeaths": "Set %s's deaths to %s.",
+  "limitedlives.addDeaths": "Added %s to %s's deaths, totalling %s deaths.",
   "limitedlives.pardoned": "%s has been pardoned.",
   "limitedlives.notBanned": "%s is not currently banned.",
   "limitedlives.welcomeBack": "Welcome back!"

@@ -106,7 +106,7 @@ public abstract class EventHandlerServer
         {
             CompoundTag tag = getPlayerPersistentData(player, LL_PERSISTED_TAG);
             int deaths = tag.getInt("deathCount");
-            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0 && player.isAlive()) //is "banned, config has ban > 0 (not permaban), player is alive
+            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0 && player.isAlive()) //is "banned, config has ban duration > 0 (not permaban), player is alive
             {
                 long timeBanned = tag.getLong("timeBanned");
                 long banDurationMs = (LimitedLives.config.banDuration.get() * 1000L);
