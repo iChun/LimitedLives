@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class EntityMixin
 {
     @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
-    public void load(CompoundTag tag, CallbackInfo ci) //load our data before loading additional save data
+    public void limitedlives_load(CompoundTag tag, CallbackInfo ci) //load our data before loading additional save data
     {
         if(LimitedLives.eventHandlerServer.isFabricEnv())
         {
@@ -22,7 +22,7 @@ public abstract class EntityMixin
     }
 
     @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V"))
-    public void saveWithoutId(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir)
+    public void limitedlives_saveWithoutId(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir)
     {
         if(LimitedLives.eventHandlerServer.isFabricEnv())
         {

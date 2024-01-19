@@ -41,34 +41,34 @@ public class ConfigFabric extends Config
             return "General configs that don't fit any other category.";
         }
 
-        @ConfigEntry(nameKey = "prop.maxLives.name", descriptionKey = "prop.maxLives.desc", comment = "Maximum lives a player can have before being \"banned\".")
+        @ConfigEntry(nameKey = "prop.maxLives.name", descriptionKey = "prop.maxLives.desc", comment = Reference.MAX_LIVES_COMMENT)
         @ConfigEntry.BoundedInteger(min = 1)
         public int maxLives = 20;
 
-        @ConfigEntry(nameKey = "prop.banType.name", descriptionKey = "prop.banType.desc", comment = "Ban type once the player dies too many times.\nAccepts: SPECTATOR, BAN")
+        @ConfigEntry(nameKey = "prop.banType.name", descriptionKey = "prop.banType.desc", comment = Reference.BAN_TYPE_COMMENT)
         public LimitedLives.BanType banType = LimitedLives.BanType.SPECTATOR;
 
-        @ConfigEntry(nameKey = "prop.banDuration.name", descriptionKey = "prop.banDuration.desc", comment = "Length of time (in seconds) the player is banned. Set to 0 to permaban.")
+        @ConfigEntry(nameKey = "prop.banDuration.name", descriptionKey = "prop.banDuration.desc", comment = Reference.BAN_DURATION_COMMENT)
         @ConfigEntry.BoundedInteger(min = 0)
         public int banDuration = 5 * 60;
 
-        @ConfigEntry(nameKey = "prop.timeToNewLife.name", descriptionKey = "prop.timeToNewLife.desc", comment = "Length of time (in seconds) since last death for the player to regain a life. Set to 0 to disable.")
+        @ConfigEntry(nameKey = "prop.timeToNewLife.name", descriptionKey = "prop.timeToNewLife.desc", comment = Reference.TIME_TO_NEW_LIFE_COMMENT)
         @ConfigEntry.BoundedInteger(min = 0)
         public int timeToNewLife = 0;
 
-        @ConfigEntry(nameKey = "prop.timeRemainingMessageFrequency.name", descriptionKey = "prop.timeRemainingMessageFrequency.desc", comment = "Length of time (in minutes) between messages announcing time remaining of ban. Set to 0 to disable.")
+        @ConfigEntry(nameKey = "prop.timeRemainingMessageFrequency.name", descriptionKey = "prop.timeRemainingMessageFrequency.desc", comment = Reference.TIME_REMAINING_MESSAGE_FREQUENCY_COMMENT)
         @ConfigEntry.BoundedInteger(min = 0)
         public int timeRemainingMessageFrequency = 5;
 
-        @ConfigEntry(nameKey = "prop.healthAdjust.name", descriptionKey = "prop.healthAdjust.desc", comment = "How much health to change per death.")
+        @ConfigEntry(nameKey = "prop.healthAdjust.name", descriptionKey = "prop.healthAdjust.desc", comment = Reference.HEALTH_ADJUST_COMMENT)
         @ConfigEntry.BoundedDouble(min = -20D, max = 20D)
         public double healthAdjust = -1D;
 
-        @ConfigEntry(nameKey = "prop.maxHealthReduction.name", descriptionKey = "prop.maxHealthReduction.desc", comment = "What's the maximum health reduction allowed before it caps out? Set to 0 to disable cap.")
+        @ConfigEntry(nameKey = "prop.maxHealthReduction.name", descriptionKey = "prop.maxHealthReduction.desc", comment = Reference.MAX_HEALTH_REDUCTION_COMMENT)
         @ConfigEntry.BoundedDouble(min = -500D, max = 0D)
         public double maxHealthReduction = 0D;
 
-        @ConfigEntry(nameKey = "prop.announceOnRespawn.name", descriptionKey = "prop.announceOnRespawn.desc", comment = "Should we announce the player their remaining lives on respawn?")
+        @ConfigEntry(nameKey = "prop.announceOnRespawn.name", descriptionKey = "prop.announceOnRespawn.desc", comment = Reference.ANNOUNCE_ON_RESPAWN_COMMENT)
         public boolean announceOnRespawn = true;
     }
 }

@@ -1,27 +1,28 @@
 modLoader="javafml"
-loaderVersion="[48,)" #forge version dep
-license="GNU Lesser General Public License v3.0"
+loaderVersion="${forge_loader_version_range}" #forge version dep
+license="${mod_license}"
 issueTrackerURL="https://github.com/iChun/LimitedLives/issues"
 
 [[mods]]
-    modId="limitedlives"
-    version="${file.jarVersion}" #mandatory
-    displayName="Limited Lives"
+    modId="${mod_id}"
+    version="${mod_version}" #mandatory
+    displayName="${mod_name}"
     displayURL="https://ichun.me/mods/limited-lives/"
+    logoFile="icon.png"
     authors="iChun"
     description='''
     A tiny mod that limits the number of lives you can have, constantly draining your health, before banning you from the server.
     '''
 
-[[dependencies.limitedlives]]
+[[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true
-    versionRange="[48,)"
+    versionRange="${forge_version_range}"
     ordering="NONE"
     side="BOTH"
-[[dependencies.limitedlives]]
+[[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.20.2,1.21)"
+    versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"

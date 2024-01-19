@@ -1,0 +1,28 @@
+modLoader="javafml"
+loaderVersion="${neoforge_loader_version_range}" #neoforge version dep
+license="${mod_license}"
+issueTrackerURL="https://github.com/iChun/LimitedLives/issues"
+
+[[mods]]
+    modId="${mod_id}"
+    version="${mod_version}" #mandatory
+    displayName="${mod_name}"
+    displayURL="https://ichun.me/mods/limited-lives/"
+    logoFile="icon.png"
+    authors="iChun"
+    description='''
+    A tiny mod that limits the number of lives you can have, constantly draining your health, before banning you from the server.
+    '''
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="${neoforge_version_range}"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="BOTH"
