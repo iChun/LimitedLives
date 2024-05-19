@@ -1,16 +1,14 @@
 package me.ichun.mods.limitedlives.loader.forge;
 
+import me.ichun.mods.ichunutil.loader.forge.EntityPersistentDataHandlerForge;
 import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.Locale;
 
 public class EventHandlerServerForge extends EventHandlerServer
 {
@@ -40,25 +38,9 @@ public class EventHandlerServerForge extends EventHandlerServer
         }
     }
 
-
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event)
     {
         onRegisterCommands(event.getDispatcher());
-    }
-
-    @Override
-    public void firePlayerTickEndEvent(Player player){}//Noop
-
-    @Override
-    public boolean isFabricEnv()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isFakePlayer(ServerPlayer player)
-    {
-        return player.connection == null || player.getClass().getSimpleName().toLowerCase(Locale.ROOT).contains("fakeplayer");
     }
 }

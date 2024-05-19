@@ -1,22 +1,20 @@
 package me.ichun.mods.limitedlives.loader.neoforge;
 
+import me.ichun.mods.ichunutil.loader.neoforge.EntityPersistentDataHandlerNeoForge;
 import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-import java.util.Locale;
-
-public class EventHandlerServerNeoforge extends EventHandlerServer
+public class EventHandlerServerNeoForge extends EventHandlerServer
 {
-    public EventHandlerServerNeoforge()
+    public EventHandlerServerNeoForge()
     {
-        super(new EntityPersistentDataHandlerNeoforge());
+        super(new EntityPersistentDataHandlerNeoForge());
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -32,33 +30,17 @@ public class EventHandlerServerNeoforge extends EventHandlerServer
     }
 
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event)
+    public void onPlayerTick(PlayerTickEvent.Post event)
     {
-        if(event.side.isServer() && event.phase == TickEvent.Phase.END && event.player.tickCount % 20 == 0)
+        if(!event.getEntity().level().isClientSide() && event.getEntity().tickCount % 20 == 0)
         {
-            onPlayerTickEnd(event.player);
+            onPlayerTickEnd(event.getEntity());
         }
     }
-
 
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event)
     {
         onRegisterCommands(event.getDispatcher());
-    }
-
-    @Override
-    public void firePlayerTickEndEvent(Player player){}//Noop
-
-    @Override
-    public boolean isFabricEnv()
-    {
-        return false;
-    }
-
-    @Override
-    public boolean isFakePlayer(ServerPlayer player)
-    {
-        return player.connection == null || player.getClass().getSimpleName().toLowerCase(Locale.ROOT).contains("fakeplayer");
     }
 }

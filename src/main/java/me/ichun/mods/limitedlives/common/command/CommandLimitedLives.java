@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import me.ichun.mods.ichunutil.common.entity.EntityHelper;
 import me.ichun.mods.limitedlives.common.LimitedLives;
 import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
 import net.minecraft.commands.CommandSourceStack;
@@ -47,7 +48,7 @@ public class CommandLimitedLives
                                 ServerPlayer player = EntityArgument.getPlayer(source, "player");
                                 int deathsArg = IntegerArgumentType.getInteger(source, "deaths");
 
-                                CompoundTag tag = LimitedLives.eventHandlerServer.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
+                                CompoundTag tag = EntityHelper.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
                                 int deaths = tag.getInt("deathCount");
 
                                 LimitedLives.eventHandlerServer.setPlayerDeaths(player, deaths + deathsArg, false);
@@ -64,9 +65,9 @@ public class CommandLimitedLives
                         .executes((source) -> {
                             ServerPlayer player = EntityArgument.getPlayer(source, "player");
 
-                            CompoundTag tag = LimitedLives.eventHandlerServer.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
+                            CompoundTag tag = EntityHelper.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
                             int deaths = tag.getInt("deathCount");
-                            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0 && player.isAlive()) //is "banned, config has ban duration > 0 (not permaban), player is alive
+                            if(deaths >= LimitedLives.config.maxLives && LimitedLives.config.banDuration > 0 && player.isAlive()) //is "banned, config has ban duration > 0 (not permaban), player is alive
                             {
                                 sendCommandOutput(source, player, Component.translatable("limitedlives.pardoned", player.getName().getString()));
 
@@ -103,12 +104,12 @@ public class CommandLimitedLives
     {
         if(source.getSource().getEntity() instanceof ServerPlayer player)
         {
-            CompoundTag tag = LimitedLives.eventHandlerServer.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
+            CompoundTag tag = EntityHelper.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
             int deaths = tag.getInt("deathCount");
-            if(deaths >= LimitedLives.config.maxLives.get() && LimitedLives.config.banDuration.get() > 0)
+            if(deaths >= LimitedLives.config.maxLives && LimitedLives.config.banDuration > 0)
             {
                 long timeBanned = tag.getLong("timeBanned");
-                long banDurationMs = (LimitedLives.config.banDuration.get() * 1000L);
+                long banDurationMs = (LimitedLives.config.banDuration * 1000L);
                 long timeBanDone = System.currentTimeMillis() - timeBanned; // in MS
                 long timeBanLeft = banDurationMs - timeBanDone;
 
@@ -116,7 +117,7 @@ public class CommandLimitedLives
             }
             else
             {
-                source.getSource().sendSuccess(() -> Component.translatable("limitedlives.livesLeft", LimitedLives.config.maxLives.get() - deaths), false);
+                source.getSource().sendSuccess(() -> Component.translatable("limitedlives.livesLeft", LimitedLives.config.maxLives - deaths), false);
             }
         }
     }

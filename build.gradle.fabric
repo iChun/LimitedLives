@@ -51,12 +51,12 @@ dependencies {
 }
 
 //If there's mixins
-loom {
+//loom {
 //	accessWidenerPath = file("src/main/resources/${project.mod_id}.accesswidener")
-	mixin {
-		defaultRefmapName = "${project.mod_id}.refmap.json"
-	}
-}
+//	mixin {
+//		defaultRefmapName = "${project.mod_id}.refmap.json"
+//	}
+//}
 
 sourceSets {
 	main {

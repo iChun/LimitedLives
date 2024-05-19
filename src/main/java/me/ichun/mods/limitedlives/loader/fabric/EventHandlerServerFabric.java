@@ -1,18 +1,14 @@
 package me.ichun.mods.limitedlives.loader.fabric;
 
+import me.ichun.mods.ichunutil.api.fabric.event.FabricEvents;
+import me.ichun.mods.ichunutil.loader.fabric.EntityPersistentDataHandlerFabric;
 import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-
-import java.util.Locale;
 
 public class EventHandlerServerFabric extends EventHandlerServer
 {
-
     public EventHandlerServerFabric()
     {
         super(new EntityPersistentDataHandlerFabric());
@@ -35,23 +31,5 @@ public class EventHandlerServerFabric extends EventHandlerServer
         });
 
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> onRegisterCommands(dispatcher));
-    }
-
-    @Override
-    public void firePlayerTickEndEvent(Player player)
-    {
-        FabricEvents.PLAYER_TICK_END.invoker().onPlayerTickEnd(player);
-    }
-
-    @Override
-    public boolean isFabricEnv()
-    {
-        return true;
-    }
-
-    @Override
-    public boolean isFakePlayer(ServerPlayer player)
-    {
-        return player instanceof FakePlayer || player.connection == null || player.getClass().getSimpleName().toLowerCase(Locale.ROOT).contains("fakeplayer");
     }
 }

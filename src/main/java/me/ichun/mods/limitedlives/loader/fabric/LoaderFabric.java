@@ -1,7 +1,8 @@
 package me.ichun.mods.limitedlives.loader.fabric;
 
+import me.ichun.mods.ichunutil.common.iChunUtil;
 import me.ichun.mods.limitedlives.common.LimitedLives;
-import me.lortseam.completeconfig.data.Config;
+import me.ichun.mods.limitedlives.common.core.Config;
 import net.fabricmc.api.ModInitializer;
 
 public class LoaderFabric extends LimitedLives
@@ -13,11 +14,7 @@ public class LoaderFabric extends LimitedLives
         modProxy = this;
 
         //register config
-        ConfigFabric configFabric = new ConfigFabric();
-        config = configFabric;
-        configFabric.configInstance = new Config(MOD_ID, new String[]{}, configFabric);
-        configFabric.configInstance.load();
-        Runtime.getRuntime().addShutdownHook(new Thread(configFabric.configInstance::save));
+        config = iChunUtil.d().registerConfig(new Config());
 
         LimitedLives.setEventHandlerServer(new EventHandlerServerFabric());
     }
