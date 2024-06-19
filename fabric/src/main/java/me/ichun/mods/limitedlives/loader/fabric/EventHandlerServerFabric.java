@@ -1,7 +1,7 @@
 package me.ichun.mods.limitedlives.loader.fabric;
 
-import me.ichun.mods.ichunutil.api.fabric.event.FabricEvents;
 import me.ichun.mods.ichunutil.loader.fabric.EntityPersistentDataHandlerFabric;
+import me.ichun.mods.ichunutil.loader.fabric.event.FabricEvents;
 import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
