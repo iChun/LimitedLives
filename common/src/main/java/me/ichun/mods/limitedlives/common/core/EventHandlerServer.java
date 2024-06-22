@@ -40,6 +40,8 @@ public abstract class EventHandlerServer
                 onPlayerTickEnd(player);
             }
         });
+
+        iChunUtil.eS().registerCommandRegistrationListener(this::onRegisterCommands);
     }
 
     public void onLivingDeath(LivingEntity living) //check for player death

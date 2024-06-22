@@ -4,7 +4,6 @@ import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
@@ -20,11 +19,5 @@ public class EventHandlerServerNeoForge extends EventHandlerServer
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event)
     {
         onPlayerRespawn((ServerPlayer)event.getEntity(), event.isEndConquered());
-    }
-
-    @SubscribeEvent
-    public void onRegisterCommands(RegisterCommandsEvent event)
-    {
-        onRegisterCommands(event.getDispatcher());
     }
 }

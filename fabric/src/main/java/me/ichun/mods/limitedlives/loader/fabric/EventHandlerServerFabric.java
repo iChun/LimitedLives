@@ -1,7 +1,6 @@
 package me.ichun.mods.limitedlives.loader.fabric;
 
 import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 
@@ -17,7 +16,5 @@ public class EventHandlerServerFabric extends EventHandlerServer
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
             super.onPlayerRespawn(newPlayer, alive);
         });
-
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> onRegisterCommands(dispatcher));
     }
 }

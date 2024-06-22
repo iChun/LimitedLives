@@ -2,7 +2,6 @@ package me.ichun.mods.limitedlives.loader.forge;
 
 import me.ichun.mods.limitedlives.common.core.EventHandlerServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -20,11 +19,5 @@ public class EventHandlerServerForge extends EventHandlerServer
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event)
     {
         onPlayerRespawn((ServerPlayer)event.getEntity(), event.isEndConquered());
-    }
-
-    @SubscribeEvent
-    public void onRegisterCommands(RegisterCommandsEvent event)
-    {
-        onRegisterCommands(event.getDispatcher());
     }
 }
