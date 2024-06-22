@@ -2,7 +2,7 @@ package me.ichun.mods.limitedlives.common.core;
 
 import com.mojang.brigadier.CommandDispatcher;
 import me.ichun.mods.ichunutil.common.entity.EntityHelper;
-import me.ichun.mods.ichunutil.common.entity.EntityPersistentDataHandler;
+import me.ichun.mods.ichunutil.common.iChunUtil;
 import me.ichun.mods.limitedlives.api.IApi;
 import me.ichun.mods.limitedlives.common.LimitedLives;
 import me.ichun.mods.limitedlives.common.command.CommandLimitedLives;
@@ -32,11 +32,14 @@ public abstract class EventHandlerServer
 
     public static final UUID HEALTH_MODIFIER_UUID = Mth.createInsecureUUID(RandomSource.create("Limited Lives Attribute Modifier ID".hashCode() * 57659L));
 
-    public final EntityPersistentDataHandler persistentDataHandler;
-
-    protected EventHandlerServer(EntityPersistentDataHandler persistentDataHandler)
+    public EventHandlerServer()
     {
-        this.persistentDataHandler = persistentDataHandler;
+        iChunUtil.eS().registerPlayerTickEndListener(player -> {
+            if(!player.level().isClientSide() && player.tickCount % 20 == 0)
+            {
+                onPlayerTickEnd(player);
+            }
+        });
     }
 
     public void onLivingDeath(LivingEntity living) //check for player death
