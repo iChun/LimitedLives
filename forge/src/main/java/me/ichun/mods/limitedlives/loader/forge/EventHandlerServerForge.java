@@ -30,9 +30,9 @@ public class EventHandlerServerForge extends EventHandlerServer
     }
 
     @SubscribeEvent
-    public void onPlayerTick(TickEvent.PlayerTickEvent event)
+    public void onPlayerTick(TickEvent.PlayerTickEvent.Post event)
     {
-        if(event.side.isServer() && event.phase == TickEvent.Phase.END && event.player.tickCount % 20 == 0)
+        if(event.side.isServer() && event.player.tickCount % 20 == 0)
         {
             onPlayerTickEnd(event.player);
         }
