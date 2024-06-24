@@ -23,7 +23,7 @@
       "me.ichun.mods.limitedlives.loader.fabric.LoaderFabric"
     ],
     "modmenu": [
-      "me.ichun.mods.limitedlives.loader.fabric.client.ModMenuIntegration"
+      "me.ichun.mods.ichunutil.loader.fabric.client.ModMenuIntegration"
     ]
   },
 
