@@ -9,11 +9,12 @@ import me.ichun.mods.limitedlives.common.command.CommandLimitedLives;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.UserBanListEntry;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -23,14 +24,13 @@ import net.minecraft.world.level.GameType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;
-import java.util.UUID;
 
 public abstract class EventHandlerServer
     implements IApi
 {
     public static final String LL_PERSISTED_TAG = "LimitedLivesSave";
 
-    public static final UUID HEALTH_MODIFIER_UUID = Mth.createInsecureUUID(RandomSource.create("Limited Lives Attribute Modifier ID".hashCode() * 57659L));
+    public static final ResourceLocation HEALTH_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(LimitedLives.MOD_ID, "max_health_modifier");
 
     public EventHandlerServer()
     {
@@ -74,7 +74,7 @@ public abstract class EventHandlerServer
         if(deaths >= LimitedLives.config.maxLives)
         {
             AttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
-            attribute.removePermanentModifier(HEALTH_MODIFIER_UUID); //Remove it, change only if config is true.
+            attribute.removeModifier(HEALTH_MODIFIER_ID); //Remove it, change only if config is true.
 
             //do ban
             MinecraftServer server = player.getServer();
@@ -159,7 +159,7 @@ public abstract class EventHandlerServer
             player.gameMode.changeGameModeForPlayer(GameType.byId(tag.getInt("gameMode")));
 
             AttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
-            attribute.removePermanentModifier(HEALTH_MODIFIER_UUID);
+            attribute.removeModifier(HEALTH_MODIFIER_ID);
         }
 
         tag.remove("deathCount");
@@ -168,7 +168,7 @@ public abstract class EventHandlerServer
         tag.remove("timeBanned");
         if(respawn)
         {
-            player.connection.player = player.getServer().getPlayerList().respawn(player, false); // recreatePlayerEntity
+            player.connection.player = player.getServer().getPlayerList().respawn(player, false, Entity.RemovalReason.CHANGED_DIMENSION); // recreatePlayerEntity
             player.displayClientMessage(Component.translatable("limitedlives.respawned"), false);
         }
     }
@@ -190,7 +190,7 @@ public abstract class EventHandlerServer
             double healthRatio = player.getHealth() / player.getMaxHealth();
 
             AttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
-            attribute.removePermanentModifier(EventHandlerServer.HEALTH_MODIFIER_UUID); //Remove it, change only if config is true.
+            attribute.removeModifier(EventHandlerServer.HEALTH_MODIFIER_ID); //Remove it, change only if config is true.
 
             double healthOffset = LimitedLives.config.healthAdjust * deaths;
 
@@ -199,7 +199,7 @@ public abstract class EventHandlerServer
                 healthOffset = LimitedLives.config.maxHealthReduction;
             }
 
-            attribute.addPermanentModifier(new AttributeModifier(EventHandlerServer.HEALTH_MODIFIER_UUID, "LimitedLivesMaxHealthModifier", healthOffset, AttributeModifier.Operation.ADD_VALUE));
+            attribute.addPermanentModifier(new AttributeModifier(HEALTH_MODIFIER_ID, healthOffset, AttributeModifier.Operation.ADD_VALUE));
 
             if(resetHealth)
             {
