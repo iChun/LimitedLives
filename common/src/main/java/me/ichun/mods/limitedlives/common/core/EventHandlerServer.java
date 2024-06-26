@@ -199,7 +199,7 @@ public abstract class EventHandlerServer
                 healthOffset = LimitedLives.config.maxHealthReduction;
             }
 
-            attribute.addPermanentModifier(new AttributeModifier(EventHandlerServer.HEALTH_MODIFIER_UUID, "LimitedLivesMaxHealthModifier", healthOffset, AttributeModifier.Operation.ADD_VALUE));
+            attribute.addPermanentModifier(new AttributeModifier(EventHandlerServer.HEALTH_MODIFIER_UUID, "LimitedLivesMaxHealthModifier", healthOffset, AttributeModifier.Operation.ADDITION));
 
             if(resetHealth)
             {
