@@ -91,7 +91,7 @@ public class CommandLimitedLives
 
     private static void sendCommandOutput(CommandContext<CommandSourceStack> source, ServerPlayer player, MutableComponent outcomeText)
     {
-        source.getSource().sendSuccess(() -> outcomeText, true);
+        source.getSource().sendSuccess(outcomeText, true);
 
         if(player != source.getSource().getPlayer())
         {
@@ -113,11 +113,11 @@ public class CommandLimitedLives
                 long timeBanDone = System.currentTimeMillis() - timeBanned; // in MS
                 long timeBanLeft = banDurationMs - timeBanDone;
 
-                source.getSource().sendSuccess(() -> Component.translatable("limitedlives.respawnTimeLeft", (int)Math.ceil(timeBanLeft / 60000F)), false);
+                source.getSource().sendSuccess(Component.translatable("limitedlives.respawnTimeLeft", (int)Math.ceil(timeBanLeft / 60000F)), false);
             }
             else
             {
-                source.getSource().sendSuccess(() -> Component.translatable("limitedlives.livesLeft", LimitedLives.config.maxLives - deaths), false);
+                source.getSource().sendSuccess(Component.translatable("limitedlives.livesLeft", LimitedLives.config.maxLives - deaths), false);
             }
         }
     }

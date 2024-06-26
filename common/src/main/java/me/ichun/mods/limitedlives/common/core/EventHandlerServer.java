@@ -35,7 +35,7 @@ public abstract class EventHandlerServer
     public EventHandlerServer()
     {
         iChunUtil.eS().registerPlayerTickEndListener(player -> {
-            if(!player.level().isClientSide() && player.tickCount % 20 == 0)
+            if(!player.level.isClientSide() && player.tickCount % 20 == 0)
             {
                 onPlayerTickEnd(player);
             }
