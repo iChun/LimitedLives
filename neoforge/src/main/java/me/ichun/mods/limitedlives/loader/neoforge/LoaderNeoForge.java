@@ -36,6 +36,6 @@ public class LoaderNeoForge extends LimitedLives
     @OnlyIn(Dist.CLIENT)
     private void initClient()
     {
-        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> (minecraft, screen) -> new WorkspaceConfigs(screen));
+        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> (modContainer, screen) -> new WorkspaceConfigs(screen));
     }
 }
