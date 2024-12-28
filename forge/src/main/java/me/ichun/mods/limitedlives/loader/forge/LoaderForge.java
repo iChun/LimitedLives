@@ -9,28 +9,28 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(LimitedLives.MOD_ID)
 public class LoaderForge extends LimitedLives
 {
-    public LoaderForge()
+    public LoaderForge(FMLJavaModLoadingContext context)
     {
         modProxy = this;
 
         //register config
-        config = iChunUtil.d().registerConfig(new Config());
+        config = iChunUtil.d().registerConfig(new Config(), context);
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> this::initClient);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> initClient(context));
 
         LimitedLives.setEventHandlerServer(new EventHandlerServerForge());
         MinecraftForge.EVENT_BUS.register(LimitedLives.eventHandlerServer);
     }
 
     @OnlyIn(Dist.CLIENT)
-    private void initClient()
+    private void initClient(FMLJavaModLoadingContext context)
     {
-        ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory(WorkspaceConfigs::new));
+        context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> new WorkspaceConfigs(screen, MOD_ID)));
     }
 }

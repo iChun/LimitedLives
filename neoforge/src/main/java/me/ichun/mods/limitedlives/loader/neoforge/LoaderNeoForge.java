@@ -7,16 +7,18 @@ import me.ichun.mods.limitedlives.common.core.Config;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 
+import java.util.function.Supplier;
+
 @Mod(LimitedLives.MOD_ID)
 public class LoaderNeoForge extends LimitedLives
 {
-    public LoaderNeoForge(IEventBus modEventBus)
+    public LoaderNeoForge(IEventBus modEventBus, ModContainer container)
     {
         modProxy = this;
 
@@ -25,7 +27,7 @@ public class LoaderNeoForge extends LimitedLives
 
         if(FMLEnvironment.dist.isClient())
         {
-            initClient();
+            initClient(container);
         }
 
         LimitedLives.setEventHandlerServer(new EventHandlerServerNeoForge());
@@ -34,8 +36,8 @@ public class LoaderNeoForge extends LimitedLives
 
 
     @OnlyIn(Dist.CLIENT)
-    private void initClient()
+    private void initClient(ModContainer container)
     {
-        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class, () -> (modContainer, screen) -> new WorkspaceConfigs(screen));
+        container.registerExtensionPoint(IConfigScreenFactory.class, (Supplier<IConfigScreenFactory>)() -> (modContainer, screen) -> new WorkspaceConfigs(screen, MOD_ID));
     }
 }
