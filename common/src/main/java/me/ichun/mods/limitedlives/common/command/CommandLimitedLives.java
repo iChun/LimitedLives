@@ -49,7 +49,7 @@ public class CommandLimitedLives
                                 int deathsArg = IntegerArgumentType.getInteger(source, "deaths");
 
                                 CompoundTag tag = EntityHelper.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
-                                int deaths = tag.getInt("deathCount");
+                                int deaths = tag.getIntOr("deathCount", 0);
 
                                 LimitedLives.eventHandlerServer.setPlayerDeaths(player, deaths + deathsArg, false);
 
@@ -66,7 +66,7 @@ public class CommandLimitedLives
                             ServerPlayer player = EntityArgument.getPlayer(source, "player");
 
                             CompoundTag tag = EntityHelper.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
-                            int deaths = tag.getInt("deathCount");
+                            int deaths = tag.getIntOr("deathCount", 0);
                             if(deaths >= LimitedLives.config.maxLives && LimitedLives.config.banDuration > 0 && player.isAlive()) //is "banned, config has ban duration > 0 (not permaban), player is alive
                             {
                                 sendCommandOutput(source, player, Component.translatable("limitedlives.pardoned", player.getName().getString()));
@@ -105,10 +105,10 @@ public class CommandLimitedLives
         if(source.getSource().getEntity() instanceof ServerPlayer player)
         {
             CompoundTag tag = EntityHelper.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
-            int deaths = tag.getInt("deathCount");
+            int deaths = tag.getIntOr("deathCount", 0);
             if(deaths >= LimitedLives.config.maxLives && LimitedLives.config.banDuration > 0)
             {
-                long timeBanned = tag.getLong("timeBanned");
+                long timeBanned = tag.getLongOr("timeBanned", 0L);
                 long banDurationMs = (LimitedLives.config.banDuration * 1000L);
                 long timeBanDone = System.currentTimeMillis() - timeBanned; // in MS
                 long timeBanLeft = banDurationMs - timeBanDone;

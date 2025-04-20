@@ -53,7 +53,7 @@ public abstract class EventHandlerServer
                 return;
             }
             CompoundTag tag = EntityHelper.getPlayerPersistentData(player, LL_PERSISTED_TAG);
-            tag.putInt("deathCount", tag.getInt("deathCount") + 1); //Save the death count
+            tag.putInt("deathCount", tag.getIntOr("deathCount", 0) + 1); //Save the death count
             tag.putLong("lastDeath", System.currentTimeMillis());
         }
     }
@@ -70,7 +70,7 @@ public abstract class EventHandlerServer
         }
 
         CompoundTag tag = EntityHelper.getPlayerPersistentData(player, LL_PERSISTED_TAG);
-        int deaths = tag.getInt("deathCount");
+        int deaths = tag.getIntOr("deathCount", 0);
         if(deaths >= LimitedLives.config.maxLives)
         {
             AttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
@@ -109,10 +109,10 @@ public abstract class EventHandlerServer
         if(playerUnsided instanceof ServerPlayer player)
         {
             CompoundTag tag = EntityHelper.getPlayerPersistentData(player, LL_PERSISTED_TAG);
-            int deaths = tag.getInt("deathCount");
+            int deaths = tag.getIntOr("deathCount", 0);
             if(LimitedLives.config.timeToNewLife > 0 && tag.contains("lastDeath") && deaths > 0) //calculate if it's time to give a new life
             {
-                long timeOfLastDeath = tag.getLong("lastDeath");
+                long timeOfLastDeath = tag.getLongOr("lastDeath", 0L);
                 long timeSinceLastDeath = System.currentTimeMillis() - timeOfLastDeath;
                 int timeToNewLifeMs = LimitedLives.config.timeToNewLife * 1000;
                 if(timeSinceLastDeath >= timeToNewLifeMs)
@@ -129,7 +129,7 @@ public abstract class EventHandlerServer
 
             if(deaths >= LimitedLives.config.maxLives && LimitedLives.config.banDuration > 0 && player.isAlive()) //is "banned, config has ban duration > 0 (not permaban), player is alive
             {
-                long timeBanned = tag.getLong("timeBanned");
+                long timeBanned = tag.getLongOr("timeBanned", 0L);
                 long banDurationMs = (LimitedLives.config.banDuration * 1000L);
                 long timeBanDone = System.currentTimeMillis() - timeBanned; // in MS
                 long timeBanLeft = banDurationMs - timeBanDone;
@@ -156,7 +156,7 @@ public abstract class EventHandlerServer
         {
             respawn = true;
 
-            player.gameMode.changeGameModeForPlayer(GameType.byId(tag.getInt("gameMode")));
+            player.gameMode.changeGameModeForPlayer(GameType.byId(tag.getIntOr("gameMode", 0)));
 
             AttributeInstance attribute = player.getAttribute(Attributes.MAX_HEALTH);
             attribute.removeModifier(HEALTH_MODIFIER_ID);
@@ -218,6 +218,6 @@ public abstract class EventHandlerServer
     public int getPlayerDeaths(@NotNull ServerPlayer player)
     {
         CompoundTag tag = EntityHelper.getPlayerPersistentData(player, EventHandlerServer.LL_PERSISTED_TAG);
-        return tag.getInt("deathCount");
+        return tag.getIntOr("deathCount", 0);
     }
 }
