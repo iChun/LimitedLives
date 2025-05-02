@@ -21,9 +21,6 @@
   "entrypoints": {
     "main": [
       "me.ichun.mods.limitedlives.loader.fabric.LoaderFabric"
-    ],
-    "modmenu": [
-      "me.ichun.mods.ichunutil.loader.fabric.client.ModMenuIntegration"
     ]
   },
 
