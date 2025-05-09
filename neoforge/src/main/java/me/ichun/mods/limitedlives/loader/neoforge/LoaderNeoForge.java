@@ -23,7 +23,7 @@ public class LoaderNeoForge extends LimitedLives
         modProxy = this;
 
         //register config
-        config = iChunUtil.d().registerConfig(new Config(), modEventBus);
+        config = iChunUtil.d().registerConfig(new Config(), modEventBus, container);
 
         if(FMLEnvironment.dist.isClient())
         {
