@@ -86,6 +86,10 @@ public class CommandLimitedLives
 
         //register alias.
         dispatcher.register(Commands.literal("limitedlives")
+            .executes((source) -> {
+                informLivesLeft(source);
+                return 0;
+            })
             .redirect(command));
     }
 
